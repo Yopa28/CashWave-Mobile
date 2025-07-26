@@ -1,7 +1,5 @@
 # cashwave_mobile
 
-A new Flutter project.
+Flutter Project
 
-## Getting Started
-
-##SandyYopa
+Sandy Yopa 
