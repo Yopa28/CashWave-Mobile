@@ -5,8 +5,6 @@ import 'package:cashwave_mobile/core/extensions/int_ext.dart';
 import 'package:cashwave_mobile/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:cashwave_mobile/presentation/home/models/order_item.dart';
 
-import '../../../core/components/spaces.dart';
-import '../../../core/constants/colors.dart';
 import '../../../core/constants/variables.dart';
 
 class OrderCard extends StatelessWidget {
@@ -21,176 +19,216 @@ class OrderCard extends StatelessWidget {
     this.padding,
   });
 
+  static const Color primary = Color(0xff087A55);
+  static const Color primaryLight = Color(0xffE8F5F0);
+  static const Color imageBackground = Color(0xffF1F6F4);
+  static const Color textPrimary = Color(0xff17221E);
+  static const Color borderColor = Color(0xffE5EBE8);
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomRight,
-      children: [
-        Container(
-          margin: padding,
-          padding: const EdgeInsets.all(16.0),
-          decoration: ShapeDecoration(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              side: const BorderSide(
-                width: 2,
-                color: Color(0xFFC7D0EB),
+    return Container(
+      margin: padding,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: borderColor),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.035),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // =====================================================
+          // IMAGE
+          // =====================================================
+
+          ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: Container(
+              width: 76,
+              height: 76,
+              color: imageBackground,
+              child: CachedNetworkImage(
+                imageUrl: '${Variables.imageBaseUrl}${data.product.image}',
+                width: 76,
+                height: 76,
+                fit: BoxFit.cover,
+                placeholder: (context, url) {
+                  return const Center(
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: primary,
+                      ),
+                    ),
+                  );
+                },
+                errorWidget: (context, url, error) {
+                  return const Center(
+                    child: Icon(
+                      Icons.fastfood_outlined,
+                      size: 32,
+                      color: primary,
+                    ),
+                  );
+                },
               ),
-              borderRadius: BorderRadius.circular(10),
             ),
           ),
-          child: Row(
-            children: [
-              // =========================
-              // PRODUCT IMAGE
-              // =========================
-              ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(50.0),
-                ),
-                child: CachedNetworkImage(
-                  width: 76,
-                  height: 76,
-                  fit: BoxFit.cover,
-                        imageUrl:
-      '${Variables.imageBaseUrl}${data.product.image}',
-                  placeholder: (context, url) {
-                    return const SizedBox(
-                      width: 76,
-                      height: 76,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  },
-                  errorWidget: (context, url, error) {
-                    return const SizedBox(
-                      width: 76,
-                      height: 76,
-                      child: Center(
-                        child: Icon(
-                          Icons.food_bank_outlined,
-                          size: 50,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
 
-              const SpaceWidth(24.0),
+          const SizedBox(width: 14),
 
-              // =========================
-              // PRODUCT INFORMATION
-              // =========================
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          // =====================================================
+          // CONTENT
+          // =====================================================
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Product name
+                Text(
+                  data.product.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: textPrimary,
+                    height: 1.3,
+                  ),
+                ),
+
+                const SizedBox(height: 5),
+
+                // Price
+                Text(
+                  data.product.price.currencyFormatRp,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: primary,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // =================================================
+                // QUANTITY
+                // =================================================
+                Row(
                   children: [
-                    // Product name + price
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            data.product.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        const SpaceWidth(8.0),
-                        Text(
-                          data.product.price.currencyFormatRp,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
+                    // MINUS
+                    _quantityButton(
+                      context: context,
+                      icon: Icons.remove,
+                      onTap: () {
+                        context.read<CheckoutBloc>().add(
+                          CheckoutEvent.removeCheckout(data.product),
+                        );
+                      },
                     ),
 
-                    const SpaceHeight(20.0),
+                    const SizedBox(width: 8),
 
-                    // =========================
                     // QUANTITY
-                    // =========================
-                    StatefulBuilder(
-                      builder: (context, setState) {
-                        return Row(
-                          children: [
-                            // REMOVE QUANTITY
-                            GestureDetector(
-                              onTap: () {
-                                context.read<CheckoutBloc>().add(
-                                      CheckoutEvent.removeCheckout(
-                                        data.product,
-                                      ),
-                                    );
-                              },
-                              child: Container(
-                                color: AppColors.white,
-                                child: const Icon(
-                                  Icons.remove_circle,
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                            ),
+                    Container(
+                      width: 36,
+                      height: 32,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: primaryLight,
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                      child: Text(
+                        data.quantity.toString(),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: primary,
+                        ),
+                      ),
+                    ),
 
-                            // QUANTITY
-                            SizedBox(
-                              width: 40.0,
-                              child: Center(
-                                child: Text(
-                                  data.quantity.toString(),
-                                ),
-                              ),
-                            ),
+                    const SizedBox(width: 8),
 
-                            // ADD QUANTITY
-                            GestureDetector(
-                              onTap: () {
-                                context.read<CheckoutBloc>().add(
-                                      CheckoutEvent.addCheckout(
-                                        data.product,
-                                      ),
-                                    );
-                              },
-                              child: Container(
-                                color: AppColors.white,
-                                child: const Icon(
-                                  Icons.add_circle,
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                            ),
-                          ],
+                    // PLUS
+                    _quantityButton(
+                      context: context,
+                      icon: Icons.add,
+                      onTap: () {
+                        context.read<CheckoutBloc>().add(
+                          CheckoutEvent.addCheckout(data.product),
                         );
                       },
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ),
-
-        // =========================
-        // DELETE BUTTON
-        // =========================
-        Padding(
-          padding: const EdgeInsets.only(
-            right: 16.0,
-          ),
-          child: IconButton(
-            onPressed: onDeleteTap,
-            icon: const Icon(
-              Icons.highlight_off,
-              color: AppColors.primary,
+              ],
             ),
           ),
+
+          const SizedBox(width: 8),
+
+          // =====================================================
+          // DELETE
+          // =====================================================
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onDeleteTap,
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: const Color(0xffFFF3F1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.delete_outline_rounded,
+                  size: 19,
+                  color: Color(0xffD9534F),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // =============================================================
+  // QUANTITY BUTTON
+  // =============================================================
+
+  static Widget _quantityButton({
+    required BuildContext context,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(9),
+        child: Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: primaryLight,
+            borderRadius: BorderRadius.circular(9),
+          ),
+          child: Icon(icon, size: 17, color: primary),
         ),
-      ],
+      ),
     );
   }
 }
