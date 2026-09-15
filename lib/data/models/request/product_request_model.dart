@@ -7,7 +7,8 @@ class ProductRequestModel {
   final String category;
   final int categoryId;
   final int isBestSeller;
-  final XFile image;
+  final XFile? image;
+
   ProductRequestModel({
     required this.name,
     required this.price,
@@ -15,7 +16,7 @@ class ProductRequestModel {
     required this.category,
     required this.categoryId,
     required this.isBestSeller,
-    required this.image,
+    this.image,
   });
 
   Map<String, String> toMap() {

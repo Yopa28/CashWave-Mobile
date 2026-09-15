@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = "http://127.0.0.1:8000/api";
+  final String baseUrl = "http://10.10.20.9:8000/api";
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     final response = await http.post(
@@ -12,10 +12,7 @@ class ApiService {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-      }),
+      body: jsonEncode({'email': email, 'password': password}),
     );
 
     if (response.statusCode == 200) {
@@ -28,10 +25,7 @@ class ApiService {
   Future<Map<String, dynamic>> getProducts(String token) async {
     final response = await http.get(
       Uri.parse('$baseUrl/products'),
-      headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer $token",
-      },
+      headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {

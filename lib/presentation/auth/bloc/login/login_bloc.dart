@@ -9,19 +9,22 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AuthRemoteDatasource authRemoteDatasource;
-  LoginBloc(this.authRemoteDatasource) : super(const _Initial()) {
-    on<_Login>((event, emit) async {
-      emit(const _Loading());
 
-      // panggil API login
-      final result = await authRemoteDatasource.login(event.email, event.password);
+  LoginBloc(this.authRemoteDatasource) : super(const LoginState.initial()) {
+    on<_Login>((event, emit) async {
+      emit(const LoginState.loading());
+
+      final result = await authRemoteDatasource.login(
+        event.email,
+        event.password,
+      );
 
       result.fold(
-            (errorMessage) {
-          emit(_Error(errorMessage));
+        (errorMessage) {
+          emit(LoginState.error(errorMessage));
         },
-            (authResponse) {
-          emit(_Success(authResponse));
+        (authResponse) {
+          emit(LoginState.success(authResponse));
         },
       );
     });

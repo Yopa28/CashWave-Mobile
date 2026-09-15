@@ -1,6 +1,6 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint
+// coverage:ignore-file
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'checkout_bloc.dart';
@@ -9,2010 +9,999 @@ part of 'checkout_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
 /// @nodoc
 mixin _$CheckoutEvent {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(Product product) addCheckout,
-    required TResult Function(Product product) removeCheckout,
-    required TResult Function(Product product) removeProduct,
-    required TResult Function(int tableNumber, String draftName) saveDraftOrder,
-    required TResult Function(DraftOrderModel data) loadDraftOrder,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(Product product)? addCheckout,
-    TResult? Function(Product product)? removeCheckout,
-    TResult? Function(Product product)? removeProduct,
-    TResult? Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult? Function(DraftOrderModel data)? loadDraftOrder,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(Product product)? addCheckout,
-    TResult Function(Product product)? removeCheckout,
-    TResult Function(Product product)? removeProduct,
-    TResult Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult Function(DraftOrderModel data)? loadDraftOrder,
-    required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_AddCheckout value) addCheckout,
-    required TResult Function(_RemoveCheckout value) removeCheckout,
-    required TResult Function(_RemoveProduct value) removeProduct,
-    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
-    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_AddCheckout value)? addCheckout,
-    TResult? Function(_RemoveCheckout value)? removeCheckout,
-    TResult? Function(_RemoveProduct value)? removeProduct,
-    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_AddCheckout value)? addCheckout,
-    TResult Function(_RemoveCheckout value)? removeCheckout,
-    TResult Function(_RemoveProduct value)? removeProduct,
-    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
-    required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CheckoutEvent);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+    return 'CheckoutEvent()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $CheckoutEventCopyWith<$Res> {
-  factory $CheckoutEventCopyWith(
-    CheckoutEvent value,
-    $Res Function(CheckoutEvent) then,
-  ) = _$CheckoutEventCopyWithImpl<$Res, CheckoutEvent>;
+class $CheckoutEventCopyWith<$Res>  {
+$CheckoutEventCopyWith(CheckoutEvent _, $Res Function(CheckoutEvent) __);
+}
+
+
+/// Adds pattern-matching-related methods to [CheckoutEvent].
+extension CheckoutEventPatterns on CheckoutEvent {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _AddCheckout value)?  addCheckout,TResult Function( _RemoveCheckout value)?  removeCheckout,TResult Function( _RemoveProduct value)?  removeProduct,TResult Function( _SaveDraftOrder value)?  saveDraftOrder,TResult Function( _LoadDraftOrder value)?  loadDraftOrder,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Started() when started != null:
+return started(_that);case _AddCheckout() when addCheckout != null:
+return addCheckout(_that);case _RemoveCheckout() when removeCheckout != null:
+return removeCheckout(_that);case _RemoveProduct() when removeProduct != null:
+return removeProduct(_that);case _SaveDraftOrder() when saveDraftOrder != null:
+return saveDraftOrder(_that);case _LoadDraftOrder() when loadDraftOrder != null:
+return loadDraftOrder(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _AddCheckout value)  addCheckout,required TResult Function( _RemoveCheckout value)  removeCheckout,required TResult Function( _RemoveProduct value)  removeProduct,required TResult Function( _SaveDraftOrder value)  saveDraftOrder,required TResult Function( _LoadDraftOrder value)  loadDraftOrder,}){
+final _that = this;
+switch (_that) {
+case _Started():
+return started(_that);case _AddCheckout():
+return addCheckout(_that);case _RemoveCheckout():
+return removeCheckout(_that);case _RemoveProduct():
+return removeProduct(_that);case _SaveDraftOrder():
+return saveDraftOrder(_that);case _LoadDraftOrder():
+return loadDraftOrder(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _AddCheckout value)?  addCheckout,TResult? Function( _RemoveCheckout value)?  removeCheckout,TResult? Function( _RemoveProduct value)?  removeProduct,TResult? Function( _SaveDraftOrder value)?  saveDraftOrder,TResult? Function( _LoadDraftOrder value)?  loadDraftOrder,}){
+final _that = this;
+switch (_that) {
+case _Started() when started != null:
+return started(_that);case _AddCheckout() when addCheckout != null:
+return addCheckout(_that);case _RemoveCheckout() when removeCheckout != null:
+return removeCheckout(_that);case _RemoveProduct() when removeProduct != null:
+return removeProduct(_that);case _SaveDraftOrder() when saveDraftOrder != null:
+return saveDraftOrder(_that);case _LoadDraftOrder() when loadDraftOrder != null:
+return loadDraftOrder(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( Product product)?  addCheckout,TResult Function( Product product)?  removeCheckout,TResult Function( Product product)?  removeProduct,TResult Function( int tableNumber,  String draftName)?  saveDraftOrder,TResult Function( DraftOrderModel data)?  loadDraftOrder,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Started() when started != null:
+return started();case _AddCheckout() when addCheckout != null:
+return addCheckout(_that.product);case _RemoveCheckout() when removeCheckout != null:
+return removeCheckout(_that.product);case _RemoveProduct() when removeProduct != null:
+return removeProduct(_that.product);case _SaveDraftOrder() when saveDraftOrder != null:
+return saveDraftOrder(_that.tableNumber,_that.draftName);case _LoadDraftOrder() when loadDraftOrder != null:
+return loadDraftOrder(_that.data);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( Product product)  addCheckout,required TResult Function( Product product)  removeCheckout,required TResult Function( Product product)  removeProduct,required TResult Function( int tableNumber,  String draftName)  saveDraftOrder,required TResult Function( DraftOrderModel data)  loadDraftOrder,}) {final _that = this;
+switch (_that) {
+case _Started():
+return started();case _AddCheckout():
+return addCheckout(_that.product);case _RemoveCheckout():
+return removeCheckout(_that.product);case _RemoveProduct():
+return removeProduct(_that.product);case _SaveDraftOrder():
+return saveDraftOrder(_that.tableNumber,_that.draftName);case _LoadDraftOrder():
+return loadDraftOrder(_that.data);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( Product product)?  addCheckout,TResult? Function( Product product)?  removeCheckout,TResult? Function( Product product)?  removeProduct,TResult? Function( int tableNumber,  String draftName)?  saveDraftOrder,TResult? Function( DraftOrderModel data)?  loadDraftOrder,}) {final _that = this;
+switch (_that) {
+case _Started() when started != null:
+return started();case _AddCheckout() when addCheckout != null:
+return addCheckout(_that.product);case _RemoveCheckout() when removeCheckout != null:
+return removeCheckout(_that.product);case _RemoveProduct() when removeProduct != null:
+return removeProduct(_that.product);case _SaveDraftOrder() when saveDraftOrder != null:
+return saveDraftOrder(_that.tableNumber,_that.draftName);case _LoadDraftOrder() when loadDraftOrder != null:
+return loadDraftOrder(_that.data);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
-class _$CheckoutEventCopyWithImpl<$Res, $Val extends CheckoutEvent>
-    implements $CheckoutEventCopyWith<$Res> {
-  _$CheckoutEventCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
 
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
+class _Started implements CheckoutEvent {
+  const _Started();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Started);
 }
 
-/// @nodoc
-abstract class _$$StartedImplCopyWith<$Res> {
-  factory _$$StartedImplCopyWith(
-    _$StartedImpl value,
-    $Res Function(_$StartedImpl) then,
-  ) = __$$StartedImplCopyWithImpl<$Res>;
-}
 
-/// @nodoc
-class __$$StartedImplCopyWithImpl<$Res>
-    extends _$CheckoutEventCopyWithImpl<$Res, _$StartedImpl>
-    implements _$$StartedImplCopyWith<$Res> {
-  __$$StartedImplCopyWithImpl(
-    _$StartedImpl _value,
-    $Res Function(_$StartedImpl) _then,
-  ) : super(_value, _then);
+@override
+int get hashCode => runtimeType.hashCode;
 
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$StartedImpl implements _Started {
-  const _$StartedImpl();
-
-  @override
-  String toString() {
+@override
+String toString() {
     return 'CheckoutEvent.started()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$StartedImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(Product product) addCheckout,
-    required TResult Function(Product product) removeCheckout,
-    required TResult Function(Product product) removeProduct,
-    required TResult Function(int tableNumber, String draftName) saveDraftOrder,
-    required TResult Function(DraftOrderModel data) loadDraftOrder,
-  }) {
-    return started();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(Product product)? addCheckout,
-    TResult? Function(Product product)? removeCheckout,
-    TResult? Function(Product product)? removeProduct,
-    TResult? Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult? Function(DraftOrderModel data)? loadDraftOrder,
-  }) {
-    return started?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(Product product)? addCheckout,
-    TResult Function(Product product)? removeCheckout,
-    TResult Function(Product product)? removeProduct,
-    TResult Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult Function(DraftOrderModel data)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (started != null) {
-      return started();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_AddCheckout value) addCheckout,
-    required TResult Function(_RemoveCheckout value) removeCheckout,
-    required TResult Function(_RemoveProduct value) removeProduct,
-    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
-    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
-  }) {
-    return started(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_AddCheckout value)? addCheckout,
-    TResult? Function(_RemoveCheckout value)? removeCheckout,
-    TResult? Function(_RemoveProduct value)? removeProduct,
-    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
-  }) {
-    return started?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_AddCheckout value)? addCheckout,
-    TResult Function(_RemoveCheckout value)? removeCheckout,
-    TResult Function(_RemoveProduct value)? removeProduct,
-    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (started != null) {
-      return started(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _Started implements CheckoutEvent {
-  const factory _Started() = _$StartedImpl;
+
 }
 
-/// @nodoc
-abstract class _$$AddCheckoutImplCopyWith<$Res> {
-  factory _$$AddCheckoutImplCopyWith(
-    _$AddCheckoutImpl value,
-    $Res Function(_$AddCheckoutImpl) then,
-  ) = __$$AddCheckoutImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({Product product});
-}
 
-/// @nodoc
-class __$$AddCheckoutImplCopyWithImpl<$Res>
-    extends _$CheckoutEventCopyWithImpl<$Res, _$AddCheckoutImpl>
-    implements _$$AddCheckoutImplCopyWith<$Res> {
-  __$$AddCheckoutImplCopyWithImpl(
-    _$AddCheckoutImpl _value,
-    $Res Function(_$AddCheckoutImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? product = null}) {
-    return _then(
-      _$AddCheckoutImpl(
-        null == product
-            ? _value.product
-            : product // ignore: cast_nullable_to_non_nullable
-                  as Product,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 
-class _$AddCheckoutImpl implements _AddCheckout {
-  const _$AddCheckoutImpl(this.product);
 
-  @override
-  final Product product;
+class _AddCheckout implements CheckoutEvent {
+  const _AddCheckout(this.product);
+  
 
-  @override
-  String toString() {
+ final  Product product;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AddCheckoutCopyWith<_AddCheckout> get copyWith => __$AddCheckoutCopyWithImpl<_AddCheckout>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddCheckout&&(identical(other.product, product) || other.product == product));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,product);
+}
+
+@override
+String toString() {
     return 'CheckoutEvent.addCheckout(product: $product)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AddCheckoutImpl &&
-            (identical(other.product, product) || other.product == product));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, product);
-
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AddCheckoutImplCopyWith<_$AddCheckoutImpl> get copyWith =>
-      __$$AddCheckoutImplCopyWithImpl<_$AddCheckoutImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(Product product) addCheckout,
-    required TResult Function(Product product) removeCheckout,
-    required TResult Function(Product product) removeProduct,
-    required TResult Function(int tableNumber, String draftName) saveDraftOrder,
-    required TResult Function(DraftOrderModel data) loadDraftOrder,
-  }) {
-    return addCheckout(product);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(Product product)? addCheckout,
-    TResult? Function(Product product)? removeCheckout,
-    TResult? Function(Product product)? removeProduct,
-    TResult? Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult? Function(DraftOrderModel data)? loadDraftOrder,
-  }) {
-    return addCheckout?.call(product);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(Product product)? addCheckout,
-    TResult Function(Product product)? removeCheckout,
-    TResult Function(Product product)? removeProduct,
-    TResult Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult Function(DraftOrderModel data)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (addCheckout != null) {
-      return addCheckout(product);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_AddCheckout value) addCheckout,
-    required TResult Function(_RemoveCheckout value) removeCheckout,
-    required TResult Function(_RemoveProduct value) removeProduct,
-    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
-    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
-  }) {
-    return addCheckout(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_AddCheckout value)? addCheckout,
-    TResult? Function(_RemoveCheckout value)? removeCheckout,
-    TResult? Function(_RemoveProduct value)? removeProduct,
-    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
-  }) {
-    return addCheckout?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_AddCheckout value)? addCheckout,
-    TResult Function(_RemoveCheckout value)? removeCheckout,
-    TResult Function(_RemoveProduct value)? removeProduct,
-    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (addCheckout != null) {
-      return addCheckout(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _AddCheckout implements CheckoutEvent {
-  const factory _AddCheckout(final Product product) = _$AddCheckoutImpl;
 
-  Product get product;
-
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AddCheckoutImplCopyWith<_$AddCheckoutImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RemoveCheckoutImplCopyWith<$Res> {
-  factory _$$RemoveCheckoutImplCopyWith(
-    _$RemoveCheckoutImpl value,
-    $Res Function(_$RemoveCheckoutImpl) then,
-  ) = __$$RemoveCheckoutImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({Product product});
+abstract mixin class _$AddCheckoutCopyWith<$Res> implements $CheckoutEventCopyWith<$Res> {
+  factory _$AddCheckoutCopyWith(_AddCheckout value, $Res Function(_AddCheckout) _then) = __$AddCheckoutCopyWithImpl;
+@useResult
+$Res call({
+ Product product
+});
+
+
+
+
+}
+/// @nodoc
+class __$AddCheckoutCopyWithImpl<$Res>
+    implements _$AddCheckoutCopyWith<$Res> {
+  __$AddCheckoutCopyWithImpl(this._self, this._then);
+
+  final _AddCheckout _self;
+  final $Res Function(_AddCheckout) _then;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? product = null,}) {
+  return _then(_AddCheckout(
+null == product ? _self.product : product // ignore: cast_nullable_to_non_nullable
+as Product,
+  ));
 }
 
-/// @nodoc
-class __$$RemoveCheckoutImplCopyWithImpl<$Res>
-    extends _$CheckoutEventCopyWithImpl<$Res, _$RemoveCheckoutImpl>
-    implements _$$RemoveCheckoutImplCopyWith<$Res> {
-  __$$RemoveCheckoutImplCopyWithImpl(
-    _$RemoveCheckoutImpl _value,
-    $Res Function(_$RemoveCheckoutImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? product = null}) {
-    return _then(
-      _$RemoveCheckoutImpl(
-        null == product
-            ? _value.product
-            : product // ignore: cast_nullable_to_non_nullable
-                  as Product,
-      ),
-    );
-  }
 }
 
 /// @nodoc
 
-class _$RemoveCheckoutImpl implements _RemoveCheckout {
-  const _$RemoveCheckoutImpl(this.product);
 
-  @override
-  final Product product;
+class _RemoveCheckout implements CheckoutEvent {
+  const _RemoveCheckout(this.product);
+  
 
-  @override
-  String toString() {
+ final  Product product;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RemoveCheckoutCopyWith<_RemoveCheckout> get copyWith => __$RemoveCheckoutCopyWithImpl<_RemoveCheckout>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RemoveCheckout&&(identical(other.product, product) || other.product == product));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,product);
+}
+
+@override
+String toString() {
     return 'CheckoutEvent.removeCheckout(product: $product)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$RemoveCheckoutImpl &&
-            (identical(other.product, product) || other.product == product));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, product);
-
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$RemoveCheckoutImplCopyWith<_$RemoveCheckoutImpl> get copyWith =>
-      __$$RemoveCheckoutImplCopyWithImpl<_$RemoveCheckoutImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(Product product) addCheckout,
-    required TResult Function(Product product) removeCheckout,
-    required TResult Function(Product product) removeProduct,
-    required TResult Function(int tableNumber, String draftName) saveDraftOrder,
-    required TResult Function(DraftOrderModel data) loadDraftOrder,
-  }) {
-    return removeCheckout(product);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(Product product)? addCheckout,
-    TResult? Function(Product product)? removeCheckout,
-    TResult? Function(Product product)? removeProduct,
-    TResult? Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult? Function(DraftOrderModel data)? loadDraftOrder,
-  }) {
-    return removeCheckout?.call(product);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(Product product)? addCheckout,
-    TResult Function(Product product)? removeCheckout,
-    TResult Function(Product product)? removeProduct,
-    TResult Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult Function(DraftOrderModel data)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (removeCheckout != null) {
-      return removeCheckout(product);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_AddCheckout value) addCheckout,
-    required TResult Function(_RemoveCheckout value) removeCheckout,
-    required TResult Function(_RemoveProduct value) removeProduct,
-    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
-    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
-  }) {
-    return removeCheckout(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_AddCheckout value)? addCheckout,
-    TResult? Function(_RemoveCheckout value)? removeCheckout,
-    TResult? Function(_RemoveProduct value)? removeProduct,
-    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
-  }) {
-    return removeCheckout?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_AddCheckout value)? addCheckout,
-    TResult Function(_RemoveCheckout value)? removeCheckout,
-    TResult Function(_RemoveProduct value)? removeProduct,
-    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (removeCheckout != null) {
-      return removeCheckout(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _RemoveCheckout implements CheckoutEvent {
-  const factory _RemoveCheckout(final Product product) = _$RemoveCheckoutImpl;
 
-  Product get product;
-
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$RemoveCheckoutImplCopyWith<_$RemoveCheckoutImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RemoveProductImplCopyWith<$Res> {
-  factory _$$RemoveProductImplCopyWith(
-    _$RemoveProductImpl value,
-    $Res Function(_$RemoveProductImpl) then,
-  ) = __$$RemoveProductImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({Product product});
+abstract mixin class _$RemoveCheckoutCopyWith<$Res> implements $CheckoutEventCopyWith<$Res> {
+  factory _$RemoveCheckoutCopyWith(_RemoveCheckout value, $Res Function(_RemoveCheckout) _then) = __$RemoveCheckoutCopyWithImpl;
+@useResult
+$Res call({
+ Product product
+});
+
+
+
+
+}
+/// @nodoc
+class __$RemoveCheckoutCopyWithImpl<$Res>
+    implements _$RemoveCheckoutCopyWith<$Res> {
+  __$RemoveCheckoutCopyWithImpl(this._self, this._then);
+
+  final _RemoveCheckout _self;
+  final $Res Function(_RemoveCheckout) _then;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? product = null,}) {
+  return _then(_RemoveCheckout(
+null == product ? _self.product : product // ignore: cast_nullable_to_non_nullable
+as Product,
+  ));
 }
 
-/// @nodoc
-class __$$RemoveProductImplCopyWithImpl<$Res>
-    extends _$CheckoutEventCopyWithImpl<$Res, _$RemoveProductImpl>
-    implements _$$RemoveProductImplCopyWith<$Res> {
-  __$$RemoveProductImplCopyWithImpl(
-    _$RemoveProductImpl _value,
-    $Res Function(_$RemoveProductImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? product = null}) {
-    return _then(
-      _$RemoveProductImpl(
-        null == product
-            ? _value.product
-            : product // ignore: cast_nullable_to_non_nullable
-                  as Product,
-      ),
-    );
-  }
 }
 
 /// @nodoc
 
-class _$RemoveProductImpl implements _RemoveProduct {
-  const _$RemoveProductImpl(this.product);
 
-  @override
-  final Product product;
+class _RemoveProduct implements CheckoutEvent {
+  const _RemoveProduct(this.product);
+  
 
-  @override
-  String toString() {
+ final  Product product;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RemoveProductCopyWith<_RemoveProduct> get copyWith => __$RemoveProductCopyWithImpl<_RemoveProduct>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RemoveProduct&&(identical(other.product, product) || other.product == product));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,product);
+}
+
+@override
+String toString() {
     return 'CheckoutEvent.removeProduct(product: $product)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$RemoveProductImpl &&
-            (identical(other.product, product) || other.product == product));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, product);
-
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$RemoveProductImplCopyWith<_$RemoveProductImpl> get copyWith =>
-      __$$RemoveProductImplCopyWithImpl<_$RemoveProductImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(Product product) addCheckout,
-    required TResult Function(Product product) removeCheckout,
-    required TResult Function(Product product) removeProduct,
-    required TResult Function(int tableNumber, String draftName) saveDraftOrder,
-    required TResult Function(DraftOrderModel data) loadDraftOrder,
-  }) {
-    return removeProduct(product);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(Product product)? addCheckout,
-    TResult? Function(Product product)? removeCheckout,
-    TResult? Function(Product product)? removeProduct,
-    TResult? Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult? Function(DraftOrderModel data)? loadDraftOrder,
-  }) {
-    return removeProduct?.call(product);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(Product product)? addCheckout,
-    TResult Function(Product product)? removeCheckout,
-    TResult Function(Product product)? removeProduct,
-    TResult Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult Function(DraftOrderModel data)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (removeProduct != null) {
-      return removeProduct(product);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_AddCheckout value) addCheckout,
-    required TResult Function(_RemoveCheckout value) removeCheckout,
-    required TResult Function(_RemoveProduct value) removeProduct,
-    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
-    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
-  }) {
-    return removeProduct(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_AddCheckout value)? addCheckout,
-    TResult? Function(_RemoveCheckout value)? removeCheckout,
-    TResult? Function(_RemoveProduct value)? removeProduct,
-    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
-  }) {
-    return removeProduct?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_AddCheckout value)? addCheckout,
-    TResult Function(_RemoveCheckout value)? removeCheckout,
-    TResult Function(_RemoveProduct value)? removeProduct,
-    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (removeProduct != null) {
-      return removeProduct(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _RemoveProduct implements CheckoutEvent {
-  const factory _RemoveProduct(final Product product) = _$RemoveProductImpl;
 
-  Product get product;
-
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$RemoveProductImplCopyWith<_$RemoveProductImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SaveDraftOrderImplCopyWith<$Res> {
-  factory _$$SaveDraftOrderImplCopyWith(
-    _$SaveDraftOrderImpl value,
-    $Res Function(_$SaveDraftOrderImpl) then,
-  ) = __$$SaveDraftOrderImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({int tableNumber, String draftName});
+abstract mixin class _$RemoveProductCopyWith<$Res> implements $CheckoutEventCopyWith<$Res> {
+  factory _$RemoveProductCopyWith(_RemoveProduct value, $Res Function(_RemoveProduct) _then) = __$RemoveProductCopyWithImpl;
+@useResult
+$Res call({
+ Product product
+});
+
+
+
+
+}
+/// @nodoc
+class __$RemoveProductCopyWithImpl<$Res>
+    implements _$RemoveProductCopyWith<$Res> {
+  __$RemoveProductCopyWithImpl(this._self, this._then);
+
+  final _RemoveProduct _self;
+  final $Res Function(_RemoveProduct) _then;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? product = null,}) {
+  return _then(_RemoveProduct(
+null == product ? _self.product : product // ignore: cast_nullable_to_non_nullable
+as Product,
+  ));
 }
 
-/// @nodoc
-class __$$SaveDraftOrderImplCopyWithImpl<$Res>
-    extends _$CheckoutEventCopyWithImpl<$Res, _$SaveDraftOrderImpl>
-    implements _$$SaveDraftOrderImplCopyWith<$Res> {
-  __$$SaveDraftOrderImplCopyWithImpl(
-    _$SaveDraftOrderImpl _value,
-    $Res Function(_$SaveDraftOrderImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? tableNumber = null, Object? draftName = null}) {
-    return _then(
-      _$SaveDraftOrderImpl(
-        null == tableNumber
-            ? _value.tableNumber
-            : tableNumber // ignore: cast_nullable_to_non_nullable
-                  as int,
-        null == draftName
-            ? _value.draftName
-            : draftName // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
-  }
 }
 
 /// @nodoc
 
-class _$SaveDraftOrderImpl implements _SaveDraftOrder {
-  const _$SaveDraftOrderImpl(this.tableNumber, this.draftName);
 
-  @override
-  final int tableNumber;
-  @override
-  final String draftName;
+class _SaveDraftOrder implements CheckoutEvent {
+  const _SaveDraftOrder(this.tableNumber, this.draftName);
+  
 
-  @override
-  String toString() {
+ final  int tableNumber;
+ final  String draftName;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SaveDraftOrderCopyWith<_SaveDraftOrder> get copyWith => __$SaveDraftOrderCopyWithImpl<_SaveDraftOrder>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaveDraftOrder&&(identical(other.tableNumber, tableNumber) || other.tableNumber == tableNumber)&&(identical(other.draftName, draftName) || other.draftName == draftName));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,tableNumber,draftName);
+}
+
+@override
+String toString() {
     return 'CheckoutEvent.saveDraftOrder(tableNumber: $tableNumber, draftName: $draftName)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SaveDraftOrderImpl &&
-            (identical(other.tableNumber, tableNumber) ||
-                other.tableNumber == tableNumber) &&
-            (identical(other.draftName, draftName) ||
-                other.draftName == draftName));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, tableNumber, draftName);
-
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SaveDraftOrderImplCopyWith<_$SaveDraftOrderImpl> get copyWith =>
-      __$$SaveDraftOrderImplCopyWithImpl<_$SaveDraftOrderImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(Product product) addCheckout,
-    required TResult Function(Product product) removeCheckout,
-    required TResult Function(Product product) removeProduct,
-    required TResult Function(int tableNumber, String draftName) saveDraftOrder,
-    required TResult Function(DraftOrderModel data) loadDraftOrder,
-  }) {
-    return saveDraftOrder(tableNumber, draftName);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(Product product)? addCheckout,
-    TResult? Function(Product product)? removeCheckout,
-    TResult? Function(Product product)? removeProduct,
-    TResult? Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult? Function(DraftOrderModel data)? loadDraftOrder,
-  }) {
-    return saveDraftOrder?.call(tableNumber, draftName);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(Product product)? addCheckout,
-    TResult Function(Product product)? removeCheckout,
-    TResult Function(Product product)? removeProduct,
-    TResult Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult Function(DraftOrderModel data)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (saveDraftOrder != null) {
-      return saveDraftOrder(tableNumber, draftName);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_AddCheckout value) addCheckout,
-    required TResult Function(_RemoveCheckout value) removeCheckout,
-    required TResult Function(_RemoveProduct value) removeProduct,
-    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
-    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
-  }) {
-    return saveDraftOrder(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_AddCheckout value)? addCheckout,
-    TResult? Function(_RemoveCheckout value)? removeCheckout,
-    TResult? Function(_RemoveProduct value)? removeProduct,
-    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
-  }) {
-    return saveDraftOrder?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_AddCheckout value)? addCheckout,
-    TResult Function(_RemoveCheckout value)? removeCheckout,
-    TResult Function(_RemoveProduct value)? removeProduct,
-    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (saveDraftOrder != null) {
-      return saveDraftOrder(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _SaveDraftOrder implements CheckoutEvent {
-  const factory _SaveDraftOrder(final int tableNumber, final String draftName) =
-      _$SaveDraftOrderImpl;
 
-  int get tableNumber;
-  String get draftName;
-
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SaveDraftOrderImplCopyWith<_$SaveDraftOrderImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$LoadDraftOrderImplCopyWith<$Res> {
-  factory _$$LoadDraftOrderImplCopyWith(
-    _$LoadDraftOrderImpl value,
-    $Res Function(_$LoadDraftOrderImpl) then,
-  ) = __$$LoadDraftOrderImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({DraftOrderModel data});
+abstract mixin class _$SaveDraftOrderCopyWith<$Res> implements $CheckoutEventCopyWith<$Res> {
+  factory _$SaveDraftOrderCopyWith(_SaveDraftOrder value, $Res Function(_SaveDraftOrder) _then) = __$SaveDraftOrderCopyWithImpl;
+@useResult
+$Res call({
+ int tableNumber, String draftName
+});
+
+
+
+
+}
+/// @nodoc
+class __$SaveDraftOrderCopyWithImpl<$Res>
+    implements _$SaveDraftOrderCopyWith<$Res> {
+  __$SaveDraftOrderCopyWithImpl(this._self, this._then);
+
+  final _SaveDraftOrder _self;
+  final $Res Function(_SaveDraftOrder) _then;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? tableNumber = null,Object? draftName = null,}) {
+  return _then(_SaveDraftOrder(
+null == tableNumber ? _self.tableNumber : tableNumber // ignore: cast_nullable_to_non_nullable
+as int,null == draftName ? _self.draftName : draftName // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$LoadDraftOrderImplCopyWithImpl<$Res>
-    extends _$CheckoutEventCopyWithImpl<$Res, _$LoadDraftOrderImpl>
-    implements _$$LoadDraftOrderImplCopyWith<$Res> {
-  __$$LoadDraftOrderImplCopyWithImpl(
-    _$LoadDraftOrderImpl _value,
-    $Res Function(_$LoadDraftOrderImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? data = null}) {
-    return _then(
-      _$LoadDraftOrderImpl(
-        null == data
-            ? _value.data
-            : data // ignore: cast_nullable_to_non_nullable
-                  as DraftOrderModel,
-      ),
-    );
-  }
 }
 
 /// @nodoc
 
-class _$LoadDraftOrderImpl implements _LoadDraftOrder {
-  const _$LoadDraftOrderImpl(this.data);
 
-  @override
-  final DraftOrderModel data;
+class _LoadDraftOrder implements CheckoutEvent {
+  const _LoadDraftOrder(this.data);
+  
 
-  @override
-  String toString() {
+ final  DraftOrderModel data;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LoadDraftOrderCopyWith<_LoadDraftOrder> get copyWith => __$LoadDraftOrderCopyWithImpl<_LoadDraftOrder>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadDraftOrder&&(identical(other.data, data) || other.data == data));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,data);
+}
+
+@override
+String toString() {
     return 'CheckoutEvent.loadDraftOrder(data: $data)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadDraftOrderImpl &&
-            (identical(other.data, data) || other.data == data));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, data);
-
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LoadDraftOrderImplCopyWith<_$LoadDraftOrderImpl> get copyWith =>
-      __$$LoadDraftOrderImplCopyWithImpl<_$LoadDraftOrderImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(Product product) addCheckout,
-    required TResult Function(Product product) removeCheckout,
-    required TResult Function(Product product) removeProduct,
-    required TResult Function(int tableNumber, String draftName) saveDraftOrder,
-    required TResult Function(DraftOrderModel data) loadDraftOrder,
-  }) {
-    return loadDraftOrder(data);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(Product product)? addCheckout,
-    TResult? Function(Product product)? removeCheckout,
-    TResult? Function(Product product)? removeProduct,
-    TResult? Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult? Function(DraftOrderModel data)? loadDraftOrder,
-  }) {
-    return loadDraftOrder?.call(data);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(Product product)? addCheckout,
-    TResult Function(Product product)? removeCheckout,
-    TResult Function(Product product)? removeProduct,
-    TResult Function(int tableNumber, String draftName)? saveDraftOrder,
-    TResult Function(DraftOrderModel data)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (loadDraftOrder != null) {
-      return loadDraftOrder(data);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_AddCheckout value) addCheckout,
-    required TResult Function(_RemoveCheckout value) removeCheckout,
-    required TResult Function(_RemoveProduct value) removeProduct,
-    required TResult Function(_SaveDraftOrder value) saveDraftOrder,
-    required TResult Function(_LoadDraftOrder value) loadDraftOrder,
-  }) {
-    return loadDraftOrder(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_AddCheckout value)? addCheckout,
-    TResult? Function(_RemoveCheckout value)? removeCheckout,
-    TResult? Function(_RemoveProduct value)? removeProduct,
-    TResult? Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult? Function(_LoadDraftOrder value)? loadDraftOrder,
-  }) {
-    return loadDraftOrder?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_AddCheckout value)? addCheckout,
-    TResult Function(_RemoveCheckout value)? removeCheckout,
-    TResult Function(_RemoveProduct value)? removeProduct,
-    TResult Function(_SaveDraftOrder value)? saveDraftOrder,
-    TResult Function(_LoadDraftOrder value)? loadDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (loadDraftOrder != null) {
-      return loadDraftOrder(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _LoadDraftOrder implements CheckoutEvent {
-  const factory _LoadDraftOrder(final DraftOrderModel data) =
-      _$LoadDraftOrderImpl;
 
-  DraftOrderModel get data;
+}
 
-  /// Create a copy of CheckoutEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoadDraftOrderImplCopyWith<_$LoadDraftOrderImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+/// @nodoc
+abstract mixin class _$LoadDraftOrderCopyWith<$Res> implements $CheckoutEventCopyWith<$Res> {
+  factory _$LoadDraftOrderCopyWith(_LoadDraftOrder value, $Res Function(_LoadDraftOrder) _then) = __$LoadDraftOrderCopyWithImpl;
+@useResult
+$Res call({
+ DraftOrderModel data
+});
+
+
+
+
+}
+/// @nodoc
+class __$LoadDraftOrderCopyWithImpl<$Res>
+    implements _$LoadDraftOrderCopyWith<$Res> {
+  __$LoadDraftOrderCopyWithImpl(this._self, this._then);
+
+  final _LoadDraftOrder _self;
+  final $Res Function(_LoadDraftOrder) _then;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? data = null,}) {
+  return _then(_LoadDraftOrder(
+null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as DraftOrderModel,
+  ));
+}
+
+
 }
 
 /// @nodoc
 mixin _$CheckoutState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )
-    success,
-    required TResult Function(String message) error,
-    required TResult Function() savedDraftOrder,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult? Function(String message)? error,
-    TResult? Function()? savedDraftOrder,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult Function(String message)? error,
-    TResult Function()? savedDraftOrder,
-    required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Error value) error,
-    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Error value)? error,
-    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
-    required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CheckoutState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+    return 'CheckoutState()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $CheckoutStateCopyWith<$Res> {
-  factory $CheckoutStateCopyWith(
-    CheckoutState value,
-    $Res Function(CheckoutState) then,
-  ) = _$CheckoutStateCopyWithImpl<$Res, CheckoutState>;
+class $CheckoutStateCopyWith<$Res>  {
+$CheckoutStateCopyWith(CheckoutState _, $Res Function(CheckoutState) __);
+}
+
+
+/// Adds pattern-matching-related methods to [CheckoutState].
+extension CheckoutStatePatterns on CheckoutState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Success value)?  success,TResult Function( _Error value)?  error,TResult Function( _SavedDraftOrder value)?  savedDraftOrder,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial(_that);case _Loading() when loading != null:
+return loading(_that);case _Success() when success != null:
+return success(_that);case _Error() when error != null:
+return error(_that);case _SavedDraftOrder() when savedDraftOrder != null:
+return savedDraftOrder(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Success value)  success,required TResult Function( _Error value)  error,required TResult Function( _SavedDraftOrder value)  savedDraftOrder,}){
+final _that = this;
+switch (_that) {
+case _Initial():
+return initial(_that);case _Loading():
+return loading(_that);case _Success():
+return success(_that);case _Error():
+return error(_that);case _SavedDraftOrder():
+return savedDraftOrder(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Success value)?  success,TResult? Function( _Error value)?  error,TResult? Function( _SavedDraftOrder value)?  savedDraftOrder,}){
+final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial(_that);case _Loading() when loading != null:
+return loading(_that);case _Success() when success != null:
+return success(_that);case _Error() when error != null:
+return error(_that);case _SavedDraftOrder() when savedDraftOrder != null:
+return savedDraftOrder(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<OrderItem> products,  int totalQuantity,  int totalPrice,  String draftName)?  success,TResult Function( String message)?  error,TResult Function()?  savedDraftOrder,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial();case _Loading() when loading != null:
+return loading();case _Success() when success != null:
+return success(_that.products,_that.totalQuantity,_that.totalPrice,_that.draftName);case _Error() when error != null:
+return error(_that.message);case _SavedDraftOrder() when savedDraftOrder != null:
+return savedDraftOrder();case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<OrderItem> products,  int totalQuantity,  int totalPrice,  String draftName)  success,required TResult Function( String message)  error,required TResult Function()  savedDraftOrder,}) {final _that = this;
+switch (_that) {
+case _Initial():
+return initial();case _Loading():
+return loading();case _Success():
+return success(_that.products,_that.totalQuantity,_that.totalPrice,_that.draftName);case _Error():
+return error(_that.message);case _SavedDraftOrder():
+return savedDraftOrder();case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<OrderItem> products,  int totalQuantity,  int totalPrice,  String draftName)?  success,TResult? Function( String message)?  error,TResult? Function()?  savedDraftOrder,}) {final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial();case _Loading() when loading != null:
+return loading();case _Success() when success != null:
+return success(_that.products,_that.totalQuantity,_that.totalPrice,_that.draftName);case _Error() when error != null:
+return error(_that.message);case _SavedDraftOrder() when savedDraftOrder != null:
+return savedDraftOrder();case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
-class _$CheckoutStateCopyWithImpl<$Res, $Val extends CheckoutState>
-    implements $CheckoutStateCopyWith<$Res> {
-  _$CheckoutStateCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
 
-  /// Create a copy of CheckoutState
-  /// with the given fields replaced by the non-null parameter values.
+class _Initial implements CheckoutState {
+  const _Initial();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
-/// @nodoc
-abstract class _$$InitialImplCopyWith<$Res> {
-  factory _$$InitialImplCopyWith(
-    _$InitialImpl value,
-    $Res Function(_$InitialImpl) then,
-  ) = __$$InitialImplCopyWithImpl<$Res>;
-}
 
-/// @nodoc
-class __$$InitialImplCopyWithImpl<$Res>
-    extends _$CheckoutStateCopyWithImpl<$Res, _$InitialImpl>
-    implements _$$InitialImplCopyWith<$Res> {
-  __$$InitialImplCopyWithImpl(
-    _$InitialImpl _value,
-    $Res Function(_$InitialImpl) _then,
-  ) : super(_value, _then);
+@override
+int get hashCode => runtimeType.hashCode;
 
-  /// Create a copy of CheckoutState
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$InitialImpl implements _Initial {
-  const _$InitialImpl();
-
-  @override
-  String toString() {
+@override
+String toString() {
     return 'CheckoutState.initial()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InitialImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )
-    success,
-    required TResult Function(String message) error,
-    required TResult Function() savedDraftOrder,
-  }) {
-    return initial();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult? Function(String message)? error,
-    TResult? Function()? savedDraftOrder,
-  }) {
-    return initial?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult Function(String message)? error,
-    TResult Function()? savedDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Error value) error,
-    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
-  }) {
-    return initial(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
-  }) {
-    return initial?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Error value)? error,
-    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _Initial implements CheckoutState {
-  const factory _Initial() = _$InitialImpl;
+
 }
 
-/// @nodoc
-abstract class _$$LoadingImplCopyWith<$Res> {
-  factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
-}
 
-/// @nodoc
-class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$CheckoutStateCopyWithImpl<$Res, _$LoadingImpl>
-    implements _$$LoadingImplCopyWith<$Res> {
-  __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of CheckoutState
-  /// with the given fields replaced by the non-null parameter values.
-}
 
 /// @nodoc
 
-class _$LoadingImpl implements _Loading {
-  const _$LoadingImpl();
 
-  @override
-  String toString() {
+class _Loading implements CheckoutState {
+  const _Loading();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
     return 'CheckoutState.loading()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadingImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )
-    success,
-    required TResult Function(String message) error,
-    required TResult Function() savedDraftOrder,
-  }) {
-    return loading();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult? Function(String message)? error,
-    TResult? Function()? savedDraftOrder,
-  }) {
-    return loading?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult Function(String message)? error,
-    TResult Function()? savedDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Error value) error,
-    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
-  }) {
-    return loading(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
-  }) {
-    return loading?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Error value)? error,
-    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _Loading implements CheckoutState {
-  const factory _Loading() = _$LoadingImpl;
+
 }
 
-/// @nodoc
-abstract class _$$SuccessImplCopyWith<$Res> {
-  factory _$$SuccessImplCopyWith(
-    _$SuccessImpl value,
-    $Res Function(_$SuccessImpl) then,
-  ) = __$$SuccessImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({
-    List<OrderItem> products,
-    int totalQuantity,
-    int totalPrice,
-    String draftName,
-  });
-}
 
-/// @nodoc
-class __$$SuccessImplCopyWithImpl<$Res>
-    extends _$CheckoutStateCopyWithImpl<$Res, _$SuccessImpl>
-    implements _$$SuccessImplCopyWith<$Res> {
-  __$$SuccessImplCopyWithImpl(
-    _$SuccessImpl _value,
-    $Res Function(_$SuccessImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of CheckoutState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? products = null,
-    Object? totalQuantity = null,
-    Object? totalPrice = null,
-    Object? draftName = null,
-  }) {
-    return _then(
-      _$SuccessImpl(
-        null == products
-            ? _value._products
-            : products // ignore: cast_nullable_to_non_nullable
-                  as List<OrderItem>,
-        null == totalQuantity
-            ? _value.totalQuantity
-            : totalQuantity // ignore: cast_nullable_to_non_nullable
-                  as int,
-        null == totalPrice
-            ? _value.totalPrice
-            : totalPrice // ignore: cast_nullable_to_non_nullable
-                  as int,
-        null == draftName
-            ? _value.draftName
-            : draftName // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 
-class _$SuccessImpl implements _Success {
-  const _$SuccessImpl(
-    final List<OrderItem> products,
-    this.totalQuantity,
-    this.totalPrice,
-    this.draftName,
-  ) : _products = products;
 
-  final List<OrderItem> _products;
-  @override
-  List<OrderItem> get products {
-    if (_products is EqualUnmodifiableListView) return _products;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_products);
-  }
+class _Success implements CheckoutState {
+  const _Success( List<OrderItem> products, this.totalQuantity, this.totalPrice, this.draftName): _products = products;
+  
 
-  @override
-  final int totalQuantity;
-  @override
-  final int totalPrice;
-  @override
-  final String draftName;
+ final  List<OrderItem> _products;
+ List<OrderItem> get products {
+  if (_products is EqualUnmodifiableListView) return _products;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_products);
+}
 
-  @override
-  String toString() {
+ final  int totalQuantity;
+ final  int totalPrice;
+ final  String draftName;
+
+/// Create a copy of CheckoutState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SuccessCopyWith<_Success> get copyWith => __$SuccessCopyWithImpl<_Success>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&const DeepCollectionEquality().equals(other.products, _products)&&(identical(other.totalQuantity, totalQuantity) || other.totalQuantity == totalQuantity)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice)&&(identical(other.draftName, draftName) || other.draftName == draftName));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_products),totalQuantity,totalPrice,draftName);
+}
+
+@override
+String toString() {
     return 'CheckoutState.success(products: $products, totalQuantity: $totalQuantity, totalPrice: $totalPrice, draftName: $draftName)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SuccessImpl &&
-            const DeepCollectionEquality().equals(other._products, _products) &&
-            (identical(other.totalQuantity, totalQuantity) ||
-                other.totalQuantity == totalQuantity) &&
-            (identical(other.totalPrice, totalPrice) ||
-                other.totalPrice == totalPrice) &&
-            (identical(other.draftName, draftName) ||
-                other.draftName == draftName));
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_products),
-    totalQuantity,
-    totalPrice,
-    draftName,
-  );
-
-  /// Create a copy of CheckoutState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      __$$SuccessImplCopyWithImpl<_$SuccessImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )
-    success,
-    required TResult Function(String message) error,
-    required TResult Function() savedDraftOrder,
-  }) {
-    return success(products, totalQuantity, totalPrice, draftName);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult? Function(String message)? error,
-    TResult? Function()? savedDraftOrder,
-  }) {
-    return success?.call(products, totalQuantity, totalPrice, draftName);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult Function(String message)? error,
-    TResult Function()? savedDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(products, totalQuantity, totalPrice, draftName);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Error value) error,
-    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
-  }) {
-    return success(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
-  }) {
-    return success?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Error value)? error,
-    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _Success implements CheckoutState {
-  const factory _Success(
-    final List<OrderItem> products,
-    final int totalQuantity,
-    final int totalPrice,
-    final String draftName,
-  ) = _$SuccessImpl;
 
-  List<OrderItem> get products;
-  int get totalQuantity;
-  int get totalPrice;
-  String get draftName;
-
-  /// Create a copy of CheckoutState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ErrorImplCopyWith<$Res> {
-  factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String message});
+abstract mixin class _$SuccessCopyWith<$Res> implements $CheckoutStateCopyWith<$Res> {
+  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) = __$SuccessCopyWithImpl;
+@useResult
+$Res call({
+ List<OrderItem> products, int totalQuantity, int totalPrice, String draftName
+});
+
+
+
+
+}
+/// @nodoc
+class __$SuccessCopyWithImpl<$Res>
+    implements _$SuccessCopyWith<$Res> {
+  __$SuccessCopyWithImpl(this._self, this._then);
+
+  final _Success _self;
+  final $Res Function(_Success) _then;
+
+/// Create a copy of CheckoutState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? products = null,Object? totalQuantity = null,Object? totalPrice = null,Object? draftName = null,}) {
+  return _then(_Success(
+null == products ? _self._products : products // ignore: cast_nullable_to_non_nullable
+as List<OrderItem>,null == totalQuantity ? _self.totalQuantity : totalQuantity // ignore: cast_nullable_to_non_nullable
+as int,null == totalPrice ? _self.totalPrice : totalPrice // ignore: cast_nullable_to_non_nullable
+as int,null == draftName ? _self.draftName : draftName // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$CheckoutStateCopyWithImpl<$Res, _$ErrorImpl>
-    implements _$$ErrorImplCopyWith<$Res> {
-  __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of CheckoutState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? message = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
-  }
 }
 
 /// @nodoc
 
-class _$ErrorImpl implements _Error {
-  const _$ErrorImpl(this.message);
 
-  @override
-  final String message;
+class _Error implements CheckoutState {
+  const _Error(this.message);
+  
 
-  @override
-  String toString() {
+ final  String message;
+
+/// Create a copy of CheckoutState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
+
+@override
+String toString() {
     return 'CheckoutState.error(message: $message)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ErrorImpl &&
-            (identical(other.message, message) || other.message == message));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, message);
-
-  /// Create a copy of CheckoutState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      __$$ErrorImplCopyWithImpl<_$ErrorImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )
-    success,
-    required TResult Function(String message) error,
-    required TResult Function() savedDraftOrder,
-  }) {
-    return error(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult? Function(String message)? error,
-    TResult? Function()? savedDraftOrder,
-  }) {
-    return error?.call(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult Function(String message)? error,
-    TResult Function()? savedDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(message);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Error value) error,
-    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
-  }) {
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
-  }) {
-    return error?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Error value)? error,
-    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _Error implements CheckoutState {
-  const factory _Error(final String message) = _$ErrorImpl;
 
-  String get message;
-
-  /// Create a copy of CheckoutState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SavedDraftOrderImplCopyWith<$Res> {
-  factory _$$SavedDraftOrderImplCopyWith(
-    _$SavedDraftOrderImpl value,
-    $Res Function(_$SavedDraftOrderImpl) then,
-  ) = __$$SavedDraftOrderImplCopyWithImpl<$Res>;
+abstract mixin class _$ErrorCopyWith<$Res> implements $CheckoutStateCopyWith<$Res> {
+  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
+@useResult
+$Res call({
+ String message
+});
+
+
+
+
+}
+/// @nodoc
+class __$ErrorCopyWithImpl<$Res>
+    implements _$ErrorCopyWith<$Res> {
+  __$ErrorCopyWithImpl(this._self, this._then);
+
+  final _Error _self;
+  final $Res Function(_Error) _then;
+
+/// Create a copy of CheckoutState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(_Error(
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$SavedDraftOrderImplCopyWithImpl<$Res>
-    extends _$CheckoutStateCopyWithImpl<$Res, _$SavedDraftOrderImpl>
-    implements _$$SavedDraftOrderImplCopyWith<$Res> {
-  __$$SavedDraftOrderImplCopyWithImpl(
-    _$SavedDraftOrderImpl _value,
-    $Res Function(_$SavedDraftOrderImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of CheckoutState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 
-class _$SavedDraftOrderImpl implements _SavedDraftOrder {
-  const _$SavedDraftOrderImpl();
 
-  @override
-  String toString() {
+class _SavedDraftOrder implements CheckoutState {
+  const _SavedDraftOrder();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SavedDraftOrder);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
     return 'CheckoutState.savedDraftOrder()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$SavedDraftOrderImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )
-    success,
-    required TResult Function(String message) error,
-    required TResult Function() savedDraftOrder,
-  }) {
-    return savedDraftOrder();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult? Function(String message)? error,
-    TResult? Function()? savedDraftOrder,
-  }) {
-    return savedDraftOrder?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-      List<OrderItem> products,
-      int totalQuantity,
-      int totalPrice,
-      String draftName,
-    )?
-    success,
-    TResult Function(String message)? error,
-    TResult Function()? savedDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (savedDraftOrder != null) {
-      return savedDraftOrder();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Error value) error,
-    required TResult Function(_SavedDraftOrder value) savedDraftOrder,
-  }) {
-    return savedDraftOrder(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Error value)? error,
-    TResult? Function(_SavedDraftOrder value)? savedDraftOrder,
-  }) {
-    return savedDraftOrder?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Error value)? error,
-    TResult Function(_SavedDraftOrder value)? savedDraftOrder,
-    required TResult orElse(),
-  }) {
-    if (savedDraftOrder != null) {
-      return savedDraftOrder(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _SavedDraftOrder implements CheckoutState {
-  const factory _SavedDraftOrder() = _$SavedDraftOrderImpl;
+
 }
+
+
+
+
+// dart format on
