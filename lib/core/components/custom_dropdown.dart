@@ -6,7 +6,7 @@ class CustomDropdown<T> extends StatelessWidget {
   final T? value;
   final List<T> items;
   final String label;
-  final Function(T? value)? onChanged;
+  final ValueChanged<T?>? onChanged;
 
   const CustomDropdown({
     super.key,
@@ -23,28 +23,30 @@ class CustomDropdown<T> extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-          ),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
         ),
         const SpaceHeight(12.0),
+
         DropdownButtonFormField<T>(
           value: value,
           onChanged: onChanged,
           items: items.map((T item) {
             return DropdownMenuItem<T>(
               value: item,
-              child: Text(item.toString()),
+              child: Text(item.toString(), overflow: TextOverflow.ellipsis),
             );
           }).toList(),
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 15,
+            ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.0),
+              borderRadius: BorderRadius.circular(16),
               borderSide: const BorderSide(color: Colors.grey),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.0),
+              borderRadius: BorderRadius.circular(16),
               borderSide: const BorderSide(color: Colors.grey),
             ),
           ),

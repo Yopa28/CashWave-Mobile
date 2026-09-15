@@ -5,7 +5,7 @@ import 'spaces.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
-  final Function(String value)? onChanged;
+  final ValueChanged<String>? onChanged;
   final bool obscureText;
   final TextInputType? keyboardType;
   final bool showLabel;
@@ -30,13 +30,11 @@ class CustomTextField extends StatelessWidget {
         if (showLabel) ...[
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
           ),
           const SpaceHeight(12.0),
         ],
+
         TextFormField(
           controller: controller,
           onChanged: onChanged,
@@ -44,12 +42,16 @@ class CustomTextField extends StatelessWidget {
           keyboardType: keyboardType,
           decoration: InputDecoration(
             suffixIcon: suffixIcon,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 15,
+            ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.0),
+              borderRadius: BorderRadius.circular(16),
               borderSide: const BorderSide(color: Colors.grey),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.0),
+              borderRadius: BorderRadius.circular(16),
               borderSide: const BorderSide(color: Colors.grey),
             ),
             hintText: label,
