@@ -6,28 +6,27 @@ import 'package:cashwave_mobile/data/models/response/auth_response_model.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRemoteDatasource {
-  /// 🔑 LOGIN
   Future<Either<String, AuthResponseModel>> login(
-      String email,
-      String password,
-      ) async {
+    String email,
+    String password,
+  ) async {
     try {
       final response = await http.post(
         Uri.parse('${Variables.baseUrl}/login'),
         headers: {
           'Accept': 'application/json',
+          'Content-Type': 'application/json',
         },
-        body: {
+        body: jsonEncode({
           'email': email,
           'password': password,
-        },
+        }),
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return right(AuthResponseModel.fromMap(data));
       } else {
-        // coba decode isi error untuk menampilkan pesan
         try {
           final errorData = jsonDecode(response.body);
           final message = errorData['message'] ?? 'Login gagal';
@@ -41,19 +40,17 @@ class AuthRemoteDatasource {
     }
   }
 
-  /// 🚪 LOGOUT
   Future<Either<String, String>> logout() async {
     try {
       final authData = await AuthLocalDatasource().getAuthData();
-
-      // ✅ Cek apakah authData atau token-nya null atau kosong
       final token = authData?.token;
+      
       if (token == null || token.isEmpty) {
         return left('Token tidak ditemukan, silakan login dulu.');
       }
 
       final response = await http.post(
-        Uri.parse('${Variables.baseUrl}/api/logout'),
+        Uri.parse('${Variables.baseUrl}/logout'),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',

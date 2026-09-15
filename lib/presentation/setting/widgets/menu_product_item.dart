@@ -9,7 +9,11 @@ import '../../../core/constants/variables.dart';
 
 class MenuProductItem extends StatelessWidget {
   final Product data;
-  const MenuProductItem({super.key, required this.data});
+
+  const MenuProductItem({
+    super.key,
+    required this.data,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +22,60 @@ class MenuProductItem extends StatelessWidget {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 3, color: AppColors.blueLight),
+          side: const BorderSide(
+            width: 3,
+            color: AppColors.blueLight,
+          ),
           borderRadius: BorderRadius.circular(10),
         ),
       ),
       child: Row(
         children: [
+          // =========================
+          // PRODUCT IMAGE
+          // =========================
           ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(10.0),
+            ),
             child: CachedNetworkImage(
-              imageUrl: '${Variables.imageBaseUrl}${data.image}',
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => const Icon(
-                Icons.food_bank_outlined,
-                size: 80,
-              ),
+              imageUrl:
+                  '${Variables.imageBaseUrl}${data.image}',
+
+              placeholder: (context, url) {
+                return const SizedBox(
+                  width: 80,
+                  height: 80,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              },
+
+              errorWidget: (context, url, error) {
+                return const SizedBox(
+                  width: 80,
+                  height: 80,
+                  child: Center(
+                    child: Icon(
+                      Icons.food_bank_outlined,
+                      size: 50,
+                    ),
+                  ),
+                );
+              },
+
               width: 80,
+              height: 80,
+              fit: BoxFit.cover,
             ),
           ),
+
           const SpaceWidth(22.0),
+
+          // =========================
+          // PRODUCT INFORMATION
+          // =========================
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +86,9 @@ class MenuProductItem extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
+
                 const SpaceHeight(5.0),
+
                 Text(
                   data.category,
                   style: const TextStyle(
@@ -55,91 +96,145 @@ class MenuProductItem extends StatelessWidget {
                     color: Colors.grey,
                   ),
                 ),
+
                 const SpaceHeight(10.0),
+
+                // =========================
+                // BUTTONS
+                // =========================
                 Row(
                   children: [
                     Flexible(
                       child: Button.outlined(
                         onPressed: () {
                           showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  contentPadding: const EdgeInsets.all(16.0),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                contentPadding:
+                                    const EdgeInsets.all(16.0),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // =========================
+                                    // TITLE
+                                    // =========================
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
                                             data.name,
                                             style: const TextStyle(
                                               fontSize: 20,
                                             ),
                                           ),
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            icon: const Icon(Icons.close),
+                                        ),
+
+                                        IconButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          icon: const Icon(
+                                            Icons.close,
                                           ),
-                                        ],
-                                      ),
-                                      const SpaceHeight(10.0),
-                                      ClipRRect(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(10.0)),
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              '${Variables.imageBaseUrl}${data.image}',
-                                          placeholder: (context, url) =>
-                                              const CircularProgressIndicator(),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(
-                                            Icons.food_bank_outlined,
-                                            size: 80,
-                                          ),
-                                          width: 80,
                                         ),
+                                      ],
+                                    ),
+
+                                    const SpaceHeight(10.0),
+
+                                    // =========================
+                                    // DETAIL IMAGE
+                                    // =========================
+                                    ClipRRect(
+                                      borderRadius:
+                                          const BorderRadius.all(
+                                        Radius.circular(10.0),
                                       ),
-                                      const SpaceHeight(10.0),
-                                      Text(
-                                        data.category,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            '${Variables.imageBaseUrl}${data.image}',
+
+                                        placeholder:
+                                            (context, url) {
+                                          return const SizedBox(
+                                            width: 80,
+                                            height: 80,
+                                            child: Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          );
+                                        },
+
+                                        errorWidget:
+                                            (context, url, error) {
+                                          return const SizedBox(
+                                            width: 80,
+                                            height: 80,
+                                            child: Center(
+                                              child: Icon(
+                                                Icons
+                                                    .food_bank_outlined,
+                                                size: 50,
+                                              ),
+                                            ),
+                                          );
+                                        },
+
+                                        width: 80,
+                                        height: 80,
+                                        fit: BoxFit.cover,
                                       ),
-                                      const SpaceHeight(10.0),
-                                      Text(
-                                        data.price.toString(),
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
+                                    ),
+
+                                    const SpaceHeight(10.0),
+
+                                    Text(
+                                      data.category,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
                                       ),
-                                      const SpaceHeight(10.0),
-                                      Text(
-                                        data.stock.toString(),
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
+                                    ),
+
+                                    const SpaceHeight(10.0),
+
+                                    Text(
+                                      data.price.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
                                       ),
-                                      const SpaceHeight(10.0),
-                                    ],
-                                  ),
-                                );
-                              });
+                                    ),
+
+                                    const SpaceHeight(10.0),
+
+                                    Text(
+                                      data.stock.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+
+                                    const SpaceHeight(10.0),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
                         },
                         label: 'Detail',
                         fontSize: 8.0,
                         height: 31,
                       ),
                     ),
+
                     const SpaceWidth(6.0),
+
                     Flexible(
                       child: Button.outlined(
                         onPressed: () {},

@@ -15,10 +15,9 @@ class ScannerPage extends StatefulWidget {
 }
 
 class _ScannerPageState extends State<ScannerPage> with WidgetsBindingObserver {
-  MobileScannerController cameraController = MobileScannerController(
+  final MobileScannerController cameraController = MobileScannerController(
     autoStart: false,
     torchEnabled: false,
-    useNewCameraSelector: true,
   );
 
   Barcode? _barcode;
@@ -41,25 +40,27 @@ class _ScannerPageState extends State<ScannerPage> with WidgetsBindingObserver {
   }
 
   void _handleBarcode(BarcodeCapture barcodes) {
-    if (mounted) {
-      // setState(() {
-      _barcode = barcodes.barcodes.firstOrNull;
-      // setState(() {});
-      if (_barcode != null) {
-        cameraController.stop();
-        context
-            .read<ProductBloc>()
-            .add(ProductEvent.searchProduct(_barcode!.displayValue ?? ''));
-        //back
-        context.pop(context);
-      }
-      // });
+    if (!mounted) {
+      return;
+    }
+
+    _barcode = barcodes.barcodes.firstOrNull;
+
+    if (_barcode != null) {
+      cameraController.stop();
+
+      context.read<ProductBloc>().add(
+        ProductEvent.searchProduct(_barcode!.displayValue ?? ''),
+      );
+
+      context.pop(context);
     }
   }
 
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addObserver(this);
 
     _subscription = cameraController.barcodes.listen(_handleBarcode);
@@ -70,10 +71,14 @@ class _ScannerPageState extends State<ScannerPage> with WidgetsBindingObserver {
   @override
   Future<void> dispose() async {
     WidgetsBinding.instance.removeObserver(this);
+
     unawaited(_subscription?.cancel());
+
     _subscription = null;
-    super.dispose();
+
     await cameraController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -87,13 +92,17 @@ class _ScannerPageState extends State<ScannerPage> with WidgetsBindingObserver {
       case AppLifecycleState.hidden:
       case AppLifecycleState.paused:
         return;
+
       case AppLifecycleState.resumed:
-        _subscription = cameraController.barcodes.listen(_handleBarcode);
+        _subscription ??= cameraController.barcodes.listen(_handleBarcode);
 
         unawaited(cameraController.start());
+
       case AppLifecycleState.inactive:
         unawaited(_subscription?.cancel());
+
         _subscription = null;
+
         unawaited(cameraController.stop());
     }
   }
@@ -104,86 +113,115 @@ class _ScannerPageState extends State<ScannerPage> with WidgetsBindingObserver {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () {
-            cameraController.dispose();
-            Navigator.pop(context);
+          onPressed: () async {
+            await cameraController.stop();
+
+            if (mounted) {
+              Navigator.pop(context);
+            }
           },
         ),
         title: const Text('Scanning'),
         actions: [
-          IconButton(
-            color: Colors.white,
-            icon: ValueListenableBuilder(
-              valueListenable: cameraController,
-              builder: (context, state, child) {
-                switch (state.torchState) {
-                  case TorchState.auto:
-                    return IconButton(
-                      color: Colors.white,
-                      iconSize: 32.0,
-                      icon: const Icon(Icons.flash_auto),
-                      onPressed: () async {
-                        await cameraController.toggleTorch();
-                      },
-                    );
-                  case TorchState.off:
-                    return const Icon(Icons.flash_off, color: Colors.grey);
-                  case TorchState.on:
-                    return const Icon(Icons.flash_on, color: Colors.yellow);
-                  case TorchState.unavailable:
-                    return const Icon(
-                      Icons.no_flash,
-                      color: Colors.grey,
-                    );
-                }
-              },
-            ),
-            iconSize: 32.0,
-            onPressed: () => cameraController.toggleTorch(),
+          // =========================
+          // TORCH BUTTON
+          // =========================
+          ValueListenableBuilder<MobileScannerState>(
+            valueListenable: cameraController,
+            builder: (context, state, child) {
+              switch (state.torchState) {
+                case TorchState.auto:
+                  return IconButton(
+                    color: Colors.white,
+                    iconSize: 32.0,
+                    icon: const Icon(Icons.flash_auto),
+                    onPressed: () async {
+                      await cameraController.toggleTorch();
+                    },
+                  );
+
+                case TorchState.off:
+                  return IconButton(
+                    color: Colors.grey,
+                    iconSize: 32.0,
+                    icon: const Icon(Icons.flash_off),
+                    onPressed: () async {
+                      await cameraController.toggleTorch();
+                    },
+                  );
+
+                case TorchState.on:
+                  return IconButton(
+                    color: Colors.yellow,
+                    iconSize: 32.0,
+                    icon: const Icon(Icons.flash_on),
+                    onPressed: () async {
+                      await cameraController.toggleTorch();
+                    },
+                  );
+
+                case TorchState.unavailable:
+                  return IconButton(
+                    color: Colors.grey,
+                    iconSize: 32.0,
+                    icon: const Icon(Icons.no_flash),
+                    onPressed: null,
+                  );
+              }
+            },
           ),
-          IconButton(
-            color: Colors.white,
-            icon: ValueListenableBuilder(
-              valueListenable: cameraController,
-              builder: (context, state, child) {
-                if (!state.isInitialized || !state.isRunning) {
-                  return const SizedBox.shrink();
-                }
 
-                final int? availableCameras = state.availableCameras;
+          // =========================
+          // SWITCH CAMERA BUTTON
+          // =========================
+          ValueListenableBuilder<MobileScannerState>(
+            valueListenable: cameraController,
+            builder: (context, state, child) {
+              if (!state.isInitialized || !state.isRunning) {
+                return const SizedBox.shrink();
+              }
 
-                if (availableCameras != null && availableCameras < 2) {
-                  return const SizedBox.shrink();
-                }
+              final int? availableCameras = state.availableCameras;
 
-                final Widget icon;
+              if (availableCameras != null && availableCameras < 2) {
+                return const SizedBox.shrink();
+              }
 
-                switch (state.cameraDirection) {
-                  case CameraFacing.front:
-                    icon = const Icon(Icons.camera_front);
-                  case CameraFacing.back:
-                    icon = const Icon(Icons.camera_rear);
-                }
+              final Widget icon;
 
-                return IconButton(
-                  iconSize: 32.0,
-                  icon: icon,
-                  onPressed: () async {
-                    await cameraController.switchCamera();
-                  },
-                );
-              },
-            ),
-            iconSize: 32.0,
-            onPressed: () => cameraController.switchCamera(),
+              switch (state.cameraDirection) {
+                case CameraFacing.front:
+                  icon = const Icon(Icons.camera_front);
+
+                case CameraFacing.back:
+                  icon = const Icon(Icons.camera_rear);
+
+                case CameraFacing.external:
+                  icon = const Icon(Icons.camera);
+
+                case CameraFacing.unknown:
+                  icon = const Icon(Icons.camera_alt);
+              }
+
+              return IconButton(
+                iconSize: 32.0,
+                icon: icon,
+                onPressed: () async {
+                  await cameraController.switchCamera();
+                },
+              );
+            },
           ),
         ],
       ),
+
+      // =========================
+      // CAMERA BODY
+      // =========================
       body: Stack(
         children: [
-          MobileScanner(
-            controller: cameraController,
-          ),
+          MobileScanner(controller: cameraController),
+
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(

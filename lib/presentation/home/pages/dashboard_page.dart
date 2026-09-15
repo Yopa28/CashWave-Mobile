@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:cashwave_mobile/presentation/history/pages/history_page.dart';
 import 'package:cashwave_mobile/presentation/home/pages/home_page.dart';
 import 'package:cashwave_mobile/presentation/order/pages/order_page.dart';
 import 'package:cashwave_mobile/presentation/setting/pages/setting_page.dart';
-
-import '../../../core/assets/assets.gen.dart';
-import '../../../core/constants/colors.dart';
-import '../widgets/nav_item.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -16,74 +13,217 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  // ============================================================
+  // STATE
+  // ============================================================
+
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const HomePage(),
-    const OrderPage(),
-    const HistoryPage(),
-    const SettingPage(),
-    // const HomePage(),
-    // const OrdersPage(),
-    // const Placeholder(),
-    // const ManageMenuPage(),
+  // ============================================================
+  // COLORS
+  // ============================================================
+
+  static const Color primary = Color(0xff087A55);
+
+  static const Color primaryLight = Color(0xffE8F5F0);
+
+  static const Color background = Color(0xffF7F9F8);
+
+  static const Color inactive = Color(0xff9AA5A1);
+
+  static const Color border = Color(0xffE5EBE8);
+
+  // ============================================================
+  // PAGES
+  // ============================================================
+
+  final List<Widget> _pages = const [
+    HomePage(),
+    OrderPage(),
+    HistoryPage(),
+    SettingPage(),
   ];
 
+  // ============================================================
+  // NAVIGATION
+  // ============================================================
+
   void _onItemTapped(int index) {
+    if (_selectedIndex == index) return;
+
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  // ============================================================
+  // BUILD
+  // ============================================================
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(30),
+      backgroundColor: background,
+
+      // ========================================================
+      // PAGE
+      // ========================================================
+      body: IndexedStack(index: _selectedIndex, children: _pages),
+
+      // ========================================================
+      // BOTTOM NAVIGATION
+      // ========================================================
+      bottomNavigationBar: _buildBottomNavigation(),
+    );
+  }
+
+  // ============================================================
+  // BOTTOM NAVIGATION
+  // ============================================================
+
+  Widget _buildBottomNavigation() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+
+        border: const Border(top: BorderSide(color: border, width: 0.7)),
+
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
           ),
-          color: AppColors.white,
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(0, -2),
-              blurRadius: 30.0,
-              blurStyle: BlurStyle.outer,
-              spreadRadius: 0,
-              color: AppColors.black.withOpacity (0.08),
-            ),
-          ],
+        ],
+      ),
+
+      child: SafeArea(
+        top: false,
+
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+
+          child: Row(
+            children: [
+              Expanded(
+                child: _buildNavItem(
+                  index: 0,
+                  icon: Icons.home_outlined,
+                  activeIcon: Icons.home_rounded,
+                  label: 'Home',
+                ),
+              ),
+
+              Expanded(
+                child: _buildNavItem(
+                  index: 1,
+                  icon: Icons.shopping_bag_outlined,
+                  activeIcon: Icons.shopping_bag_rounded,
+                  label: 'Orders',
+                ),
+              ),
+
+              Expanded(
+                child: _buildNavItem(
+                  index: 2,
+                  icon: Icons.receipt_long_outlined,
+                  activeIcon: Icons.receipt_long_rounded,
+                  label: 'History',
+                ),
+              ),
+
+              Expanded(
+                child: _buildNavItem(
+                  index: 3,
+                  icon: Icons.settings_outlined,
+                  activeIcon: Icons.settings_rounded,
+                  label: 'Setting',
+                ),
+              ),
+            ],
+          ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+      ),
+    );
+  }
+
+  // ============================================================
+  // NAV ITEM
+  // ============================================================
+
+  Widget _buildNavItem({
+    required int index,
+    required IconData icon,
+    required IconData activeIcon,
+    required String label,
+  }) {
+    final bool isActive = _selectedIndex == index;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+
+      onTap: () {
+        _onItemTapped(index);
+      },
+
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+
+        curve: Curves.easeOut,
+
+        margin: const EdgeInsets.symmetric(horizontal: 5),
+
+        padding: const EdgeInsets.symmetric(vertical: 7),
+
+        decoration: BoxDecoration(
+          color: isActive ? primaryLight : Colors.transparent,
+
+          borderRadius: BorderRadius.circular(14),
+        ),
+
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+
           children: [
-            NavItem(
-              iconPath: Assets.icons.home.path,
-              label: 'Home',
-              isActive: _selectedIndex == 0,
-              onTap: () => _onItemTapped(0),
+            // ==================================================
+            // ICON
+            // ==================================================
+
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 180),
+
+              transitionBuilder: (child, animation) {
+                return ScaleTransition(scale: animation, child: child);
+              },
+
+              child: Icon(
+                isActive ? activeIcon : icon,
+
+                key: ValueKey(isActive),
+
+                size: 23,
+
+                color: isActive ? primary : inactive,
+              ),
             ),
-            NavItem(
-                iconPath: Assets.icons.orders.path,
-                label: 'Orders',
-                isActive: _selectedIndex == 1,
-                onTap: () {
-                  _onItemTapped(1);
-                  // context.push(const OrdersPage());
-                }),
-            NavItem(
-              iconPath: Assets.icons.payments.path,
-              label: 'History',
-              isActive: _selectedIndex == 2,
-              onTap: () => _onItemTapped(2),
-            ),
-            NavItem(
-              iconPath: Assets.icons.dashboard.path,
-              label: 'Setting',
-              isActive: _selectedIndex == 3,
-              onTap: () => _onItemTapped(3),
+
+            const SizedBox(height: 3),
+
+            // ==================================================
+            // LABEL
+            // ==================================================
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 180),
+
+              style: TextStyle(
+                color: isActive ? primary : inactive,
+
+                fontSize: 10,
+
+                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+              ),
+
+              child: Text(label),
             ),
           ],
         ),

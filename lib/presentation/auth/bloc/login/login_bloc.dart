@@ -9,8 +9,6 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AuthRemoteDatasource authRemoteDatasource;
-
-  // ✅ pastikan kamu inject AuthRemoteDatasource
   LoginBloc(this.authRemoteDatasource) : super(const _Initial()) {
     on<_Login>((event, emit) async {
       emit(const _Loading());

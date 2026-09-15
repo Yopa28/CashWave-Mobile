@@ -32,40 +32,75 @@ class OrderCard extends StatelessWidget {
           decoration: ShapeDecoration(
             color: Colors.white,
             shape: RoundedRectangleBorder(
-              side: const BorderSide(width: 2, color: Color(0xFFC7D0EB)),
+              side: const BorderSide(
+                width: 2,
+                color: Color(0xFFC7D0EB),
+              ),
               borderRadius: BorderRadius.circular(10),
             ),
           ),
           child: Row(
             children: [
+              // =========================
+              // PRODUCT IMAGE
+              // =========================
               ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-                  child: CachedNetworkImage(
-                    width: 76,
-                    height: 76,
-                    fit: BoxFit.cover,
-                    imageUrl: '${Variables.imageBaseUrl}${data.product.image}',
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => const Icon(
-                      Icons.food_bank_outlined,
-                      size: 80,
-                    ),
-                  )),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(50.0),
+                ),
+                child: CachedNetworkImage(
+                  width: 76,
+                  height: 76,
+                  fit: BoxFit.cover,
+                        imageUrl:
+      '${Variables.imageBaseUrl}${data.product.image}',
+                  placeholder: (context, url) {
+                    return const SizedBox(
+                      width: 76,
+                      height: 76,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  },
+                  errorWidget: (context, url, error) {
+                    return const SizedBox(
+                      width: 76,
+                      height: 76,
+                      child: Center(
+                        child: Icon(
+                          Icons.food_bank_outlined,
+                          size: 50,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
               const SpaceWidth(24.0),
+
+              // =========================
+              // PRODUCT INFORMATION
+              // =========================
               Flexible(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Product name + price
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          data.product.name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w700,
+                        Flexible(
+                          child: Text(
+                            data.product.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
+                        const SpaceWidth(8.0),
                         Text(
                           data.product.price.currencyFormatRp,
                           style: const TextStyle(
@@ -74,45 +109,64 @@ class OrderCard extends StatelessWidget {
                         ),
                       ],
                     ),
+
                     const SpaceHeight(20.0),
+
+                    // =========================
+                    // QUANTITY
+                    // =========================
                     StatefulBuilder(
-                      builder: (context, setState) => Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              context.read<CheckoutBloc>().add(
-                                  CheckoutEvent.removeCheckout(data.product));
-                            },
-                            child: Container(
-                              color: AppColors.white,
-                              child: const Icon(
-                                Icons.remove_circle,
-                                color: AppColors.primary,
+                      builder: (context, setState) {
+                        return Row(
+                          children: [
+                            // REMOVE QUANTITY
+                            GestureDetector(
+                              onTap: () {
+                                context.read<CheckoutBloc>().add(
+                                      CheckoutEvent.removeCheckout(
+                                        data.product,
+                                      ),
+                                    );
+                              },
+                              child: Container(
+                                color: AppColors.white,
+                                child: const Icon(
+                                  Icons.remove_circle,
+                                  color: AppColors.primary,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 40.0,
-                            child: Center(
-                              child: Text(data.quantity.toString()),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              context
-                                  .read<CheckoutBloc>()
-                                  .add(CheckoutEvent.addCheckout(data.product));
-                            },
-                            child: Container(
-                              color: AppColors.white,
-                              child: const Icon(
-                                Icons.add_circle,
-                                color: AppColors.primary,
+
+                            // QUANTITY
+                            SizedBox(
+                              width: 40.0,
+                              child: Center(
+                                child: Text(
+                                  data.quantity.toString(),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+
+                            // ADD QUANTITY
+                            GestureDetector(
+                              onTap: () {
+                                context.read<CheckoutBloc>().add(
+                                      CheckoutEvent.addCheckout(
+                                        data.product,
+                                      ),
+                                    );
+                              },
+                              child: Container(
+                                color: AppColors.white,
+                                child: const Icon(
+                                  Icons.add_circle,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -120,8 +174,14 @@ class OrderCard extends StatelessWidget {
             ],
           ),
         ),
+
+        // =========================
+        // DELETE BUTTON
+        // =========================
         Padding(
-          padding: const EdgeInsets.only(right: 16.0),
+          padding: const EdgeInsets.only(
+            right: 16.0,
+          ),
           child: IconButton(
             onPressed: onDeleteTap,
             icon: const Icon(

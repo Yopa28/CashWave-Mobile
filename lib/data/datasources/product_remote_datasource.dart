@@ -13,7 +13,7 @@ class ProductRemoteDatasource {
     try {
       final token = await AuthLocalDatasource().getToken();
       final response = await http.get(
-        Uri.parse('https://cashwave.my.id/api/products'),
+        Uri.parse('http://127.0.0.1:8000/api/products'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
@@ -41,7 +41,7 @@ class ProductRemoteDatasource {
 
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('https://cashwave.my.id/api/products'),
+        Uri.parse('http://127.0.0.1:8000/api/products'),
       );
       request.headers.addAll({
         'Accept': 'application/json',
@@ -78,12 +78,15 @@ class ProductRemoteDatasource {
     try {
       final token = await AuthLocalDatasource().getToken();
       final response = await http.get(
-        Uri.parse('https://cashwave.my.id/api/products'),
+        Uri.parse('http://127.0.0.1:8000/api/list-categories'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );
+      print('TOKEN: $token');
+print('STATUS: ${response.statusCode}');
+print('BODY: ${response.body}');
 
       if (response.statusCode == 200) {
         return right(CategoryResponseModel.fromJson(response.body));
