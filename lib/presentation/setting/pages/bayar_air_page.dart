@@ -7,9 +7,6 @@ import 'package:cashwave_mobile/presentation/home/bloc/payment/payment_bloc.dart
 import 'package:cashwave_mobile/presentation/home/bloc/payment/payment_event.dart';
 import 'package:cashwave_mobile/presentation/home/bloc/payment/payment_state.dart';
 
-
-
-
 class BayarAirPage extends StatefulWidget {
   const BayarAirPage({super.key});
 
@@ -75,9 +72,7 @@ class _BayarAirPageState extends State<BayarAirPage> {
             },
             builder: (context, state) {
               return state.maybeWhen(
-                loading: () => const Center(
-                  child: CircularProgressIndicator(),
-                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
                 orElse: () {
                   return ElevatedButton(
                     onPressed: () {
