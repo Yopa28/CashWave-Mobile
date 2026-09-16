@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cashwave_mobile/core/extensions/build_context_ext.dart';
@@ -23,10 +25,6 @@ class PaymentCashDialog extends StatefulWidget {
 class _PaymentCashDialogState extends State<PaymentCashDialog> {
   late final TextEditingController priceController;
 
-  // ============================================================
-  // COLORS
-  // ============================================================
-
   static const Color primary = Color(0xff087A55);
   static const Color primaryDark = Color(0xff065C40);
   static const Color primaryLight = Color(0xffE8F5F0);
@@ -35,6 +33,8 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
   static const Color textPrimary = Color(0xff17221E);
   static const Color textSecondary = Color(0xff7A8581);
   static const Color borderColor = Color(0xffE5EBE8);
+
+  bool _isProcessing = false;
 
   @override
   void initState() {
@@ -51,9 +51,18 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
     super.dispose();
   }
 
-  // ============================================================
-  // BUILD
-  // ============================================================
+  int get _enteredAmount {
+    return priceController.text.toIntegerFromText;
+  }
+
+  int get _change {
+    final change = _enteredAmount - widget.price;
+    return change < 0 ? 0 : change;
+  }
+
+  bool get _isEnough {
+    return _enteredAmount >= widget.price;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,21 +81,15 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(),
-
               const SizedBox(height: 22),
-
               _buildTotalCard(),
-
               const SizedBox(height: 20),
-
               _buildPaymentInput(),
-
               const SizedBox(height: 12),
-
               _buildQuickAmountButtons(),
-
+              const SizedBox(height: 16),
+              _buildChangePreview(),
               const SizedBox(height: 24),
-
               _buildPayButton(),
             ],
           ),
@@ -94,10 +97,6 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
       ),
     );
   }
-
-  // ============================================================
-  // HEADER
-  // ============================================================
 
   Widget _buildHeader() {
     return Row(
@@ -111,9 +110,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
           ),
           child: const Icon(Icons.payments_outlined, color: primary, size: 23),
         ),
-
         const SizedBox(width: 12),
-
         const Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,12 +131,10 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
             ],
           ),
         ),
-
-        // CLOSE
         Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () => context.pop(),
+            onTap: _isProcessing ? null : () => Navigator.pop(context),
             borderRadius: BorderRadius.circular(10),
             child: Container(
               width: 36,
@@ -159,10 +154,6 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
       ],
     );
   }
-
-  // ============================================================
-  // TOTAL CARD
-  // ============================================================
 
   Widget _buildTotalCard() {
     return Container(
@@ -188,9 +179,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
               size: 21,
             ),
           ),
-
           const SizedBox(width: 12),
-
           const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,7 +204,6 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
               ],
             ),
           ),
-
           Text(
             widget.price.currencyFormatRp,
             style: const TextStyle(
@@ -229,10 +217,6 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
     );
   }
 
-  // ============================================================
-  // PAYMENT INPUT
-  // ============================================================
-
   Widget _buildPaymentInput() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,18 +229,19 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
             color: textPrimary,
           ),
         ),
-
         const SizedBox(height: 9),
-
         Container(
           decoration: BoxDecoration(
             color: background,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: borderColor),
+            border: Border.all(
+              color: _isEnough ? primary.withOpacity(0.35) : borderColor,
+            ),
           ),
           child: TextField(
             controller: priceController,
             keyboardType: TextInputType.number,
+            enabled: !_isProcessing,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -283,21 +268,24 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                 vertical: 17,
               ),
             ),
-            onChanged: _formatPrice,
+            onChanged: (value) {
+              _formatPrice(value);
+              setState(() {});
+            },
           ),
         ),
       ],
     );
   }
 
-  // ============================================================
-  // FORMAT PRICE
-  // ============================================================
-
   void _formatPrice(String value) {
     final int priceValue = value.toIntegerFromText;
 
     final formatted = priceValue.currencyFormatRp;
+
+    if (priceController.text == formatted) {
+      return;
+    }
 
     priceController.value = TextEditingValue(
       text: formatted,
@@ -305,66 +293,80 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
     );
   }
 
-  // ============================================================
-  // QUICK AMOUNT
-  // ============================================================
-
   Widget _buildQuickAmountButtons() {
-    return Row(
-      children: [
-        Expanded(
-          child: _quickAmountButton(
-            label: 'Uang Pas',
-            onTap: () {
-              priceController.text = widget.price.currencyFormatRp;
+    final amounts = <int>[
+      widget.price,
+      _roundUp(widget.price, 5000),
+      _roundUp(widget.price, 10000),
+      _roundUp(widget.price, 50000),
+    ];
 
-              priceController.selection = TextSelection.collapsed(
-                offset: priceController.text.length,
-              );
-            },
+    final uniqueAmounts = amounts.toSet().toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Nominal Cepat',
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            color: textSecondary,
           ),
         ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: uniqueAmounts.map((amount) {
+            final isExact = amount == widget.price;
 
-        const SizedBox(width: 8),
-
-        Expanded(
-          child: _quickAmountButton(
-            label: widget.price.currencyFormatRp,
-            onTap: () {
-              priceController.text = widget.price.currencyFormatRp;
-
-              priceController.selection = TextSelection.collapsed(
-                offset: priceController.text.length,
-              );
-            },
-          ),
+            return _quickAmountButton(
+              label: isExact ? 'Uang Pas' : amount.currencyFormatRp,
+              amount: amount,
+            );
+          }).toList(),
         ),
       ],
     );
   }
 
-  Widget _quickAmountButton({
-    required String label,
-    required VoidCallback onTap,
-  }) {
+  int _roundUp(int value, int multiple) {
+    return ((value + multiple - 1) ~/ multiple) * multiple;
+  }
+
+  Widget _quickAmountButton({required String label, required int amount}) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: _isProcessing
+            ? null
+            : () {
+                final formatted = amount.currencyFormatRp;
+
+                priceController.value = TextEditingValue(
+                  text: formatted,
+                  selection: TextSelection.collapsed(offset: formatted.length),
+                );
+
+                setState(() {});
+              },
         borderRadius: BorderRadius.circular(11),
         child: Container(
-          height: 42,
-          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
           decoration: BoxDecoration(
-            color: primaryLight,
+            color: amount == widget.price ? primaryLight : background,
             borderRadius: BorderRadius.circular(11),
+            border: Border.all(
+              color: amount == widget.price
+                  ? primary.withOpacity(0.15)
+                  : borderColor,
+            ),
           ),
           child: Text(
             label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w700,
               color: primary,
             ),
@@ -374,9 +376,53 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
     );
   }
 
-  // ============================================================
-  // PAY BUTTON
-  // ============================================================
+  Widget _buildChangePreview() {
+    final enough = _isEnough;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: enough ? primaryLight : const Color(0xfffff1f0),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: enough ? primary.withOpacity(0.10) : const Color(0xfff2d2d0),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            enough
+                ? Icons.check_circle_outline_rounded
+                : Icons.info_outline_rounded,
+            size: 20,
+            color: enough ? primary : const Color(0xffD9534F),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              enough ? 'Kembalian' : 'Nominal pembayaran masih kurang',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: enough ? textPrimary : const Color(0xffD9534F),
+              ),
+            ),
+          ),
+          if (enough)
+            Text(
+              _change.currencyFormatRp,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                color: primary,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildPayButton() {
     return BlocConsumer<OrderBloc, OrderState>(
@@ -394,119 +440,171 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                 namaKasir,
                 _,
               ) async {
-                final transactionTime = DateFormat(
-                  'yyyy-MM-ddTHH:mm:ss',
-                ).format(DateTime.now());
+                if (!mounted) return;
 
-                // ==================================================
-                // SAVE LOCAL ORDER
-                // ==================================================
+                try {
+                  final transactionTime = DateFormat(
+                    'yyyy-MM-ddTHH:mm:ss',
+                  ).format(DateTime.now());
 
-                final orderModel = OrderModel(
-                  paymentMethod: payment,
-                  nominalBayar: nominal,
-                  orders: data,
-                  totalQuantity: qty,
-                  totalPrice: total,
-                  idKasir: idKasir,
-                  namaKasir: namaKasir,
-                  transactionTime: transactionTime,
-                  isSync: true,
-                );
+                  // Simpan transaksi ke local
+                  final orderModel = OrderModel(
+                    paymentMethod: payment,
+                    nominalBayar: nominal,
+                    orders: data,
+                    totalQuantity: qty,
+                    totalPrice: total,
+                    idKasir: idKasir,
+                    namaKasir: namaKasir,
+                    transactionTime: transactionTime,
+                    isSync: true,
+                  );
 
-                await ProductLocalDatasource.instance.saveOrder(orderModel);
+                  await ProductLocalDatasource.instance.saveOrder(orderModel);
 
-                // ==================================================
-                // SEND ORDER TO SERVER
-                // ==================================================
+                  // Kirim transaksi ke server
+                  final orderRequestModel = OrderRequestModel(
+                    transactionTime: transactionTime,
+                    kasirId: idKasir,
+                    totalPrice: total,
+                    totalItem: qty,
+                    paymentMethod: payment,
+                    orderItems: data
+                        .map(
+                          (e) => OrderItemModel(
+                            productId: e.product.id!,
+                            quantity: e.quantity,
+                            totalPrice: e.product.price * e.quantity,
+                          ),
+                        )
+                        .toList(),
+                  );
 
-                final orderRequestModel = OrderRequestModel(
-                  transactionTime: transactionTime,
-                  kasirId: idKasir,
-                  totalPrice: total,
-                  totalItem: qty,
-                  paymentMethod: payment,
-                  orderItems: data
-                      .map(
-                        (e) => OrderItemModel(
-                          productId: e.product.productId!,
-                          quantity: e.quantity,
-                          totalPrice: e.product.price * e.quantity,
-                        ),
-                      )
-                      .toList(),
-                );
+                  print('📦 ORDER REQUEST:');
+                  print(jsonEncode(orderRequestModel.toMap()));
 
-                await OrderRemoteDatasource().sendOrder(orderRequestModel);
+                  final sent = await OrderRemoteDatasource().sendOrder(
+                    orderRequestModel,
+                  );
 
-                if (!context.mounted) return;
+                  if (!sent) {
+                    if (!mounted) return;
 
-                context.pop();
+                    setState(() {
+                      _isProcessing = false;
+                    });
 
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) {
-                    return const PaymentSuccessDialog();
-                  },
-                );
+                    _showError(
+                      context,
+                      title: 'Order Gagal',
+                      message:
+                          'Pesanan tersimpan di perangkat, '
+                          'tetapi belum berhasil dikirim ke server.',
+                    );
+
+                    return;
+                  }
+
+                  print('✅ Order berhasil dikirim ke server');
+
+                  if (!mounted) return;
+
+                  setState(() {
+                    _isProcessing = false;
+                  });
+
+                  context.pop();
+
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      return const PaymentSuccessDialog();
+                    },
+                  );
+                } catch (e) {
+                  print('❌ Error proses pembayaran: $e');
+
+                  if (!mounted) return;
+
+                  setState(() {
+                    _isProcessing = false;
+                  });
+
+                  _showError(
+                    context,
+                    title: 'Pembayaran Gagal',
+                    message: 'Pesanan gagal diproses. Silakan coba lagi.',
+                  );
+                }
               },
+          error: (message) {
+            if (!mounted) return;
+
+            setState(() {
+              _isProcessing = false;
+            });
+
+            _showError(context, title: 'Pembayaran Gagal', message: message);
+          },
         );
       },
       builder: (context, state) {
-        return state.maybeWhen(
-          orElse: () {
-            return _payButton(context, enabled: true);
-          },
-          error: (message) {
-            return _payButton(context, enabled: true);
-          },
-          success: (data, qty, total, payment, _, idKasir, namaKasir, __) {
-            return _payButton(context, enabled: true, total: total);
-          },
+        return SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: ElevatedButton(
+            onPressed: (!_isEnough || _isProcessing)
+                ? null
+                : () => _handlePayment(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primary,
+              disabledBackgroundColor: const Color(0xffDDE5E1),
+              foregroundColor: Colors.white,
+              disabledForegroundColor: const Color(0xff9AA5A1),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            child: _isProcessing
+                ? const SizedBox(
+                    width: 21,
+                    height: 21,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      color: Colors.white,
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.check_circle_outline_rounded, size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        _change > 0
+                            ? 'Bayar • ${_change.currencyFormatRp}'
+                            : 'Bayar Sekarang',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
         );
       },
     );
   }
 
-  Widget _payButton(BuildContext context, {required bool enabled, int? total}) {
-    return SizedBox(
-      width: double.infinity,
-      height: 54,
-      child: ElevatedButton(
-        onPressed: enabled ? () => _handlePayment(context, total) : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primary,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.check_circle_outline_rounded, size: 20),
-            SizedBox(width: 8),
-            Text(
-              'Bayar Sekarang',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  void _handlePayment(BuildContext context) {
+    if (_isProcessing) return;
 
-  // ============================================================
-  // HANDLE PAYMENT
-  // ============================================================
+    final nominal = _enteredAmount;
+    final total = widget.price;
 
-  void _handlePayment(BuildContext context, int? totalFromState) {
-    final text = priceController.text.trim();
-
-    // EMPTY
-    if (text.isEmpty) {
+    if (nominal <= 0) {
       _showError(
         context,
         title: 'Nominal Belum Diisi',
@@ -515,28 +613,23 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
       return;
     }
 
-    final nominal = text.toIntegerFromText;
-
-    final total = totalFromState ?? widget.price;
-
-    // LESS THAN TOTAL
     if (nominal < total) {
       _showError(
         context,
         title: 'Nominal Tidak Cukup',
         message:
-            'Nominal pembayaran tidak boleh lebih kecil dari total pesanan.',
+            'Nominal pembayaran tidak boleh lebih kecil '
+            'dari total pesanan.',
       );
       return;
     }
 
-    // SEND EVENT
+    setState(() {
+      _isProcessing = true;
+    });
+
     context.read<OrderBloc>().add(OrderEvent.addNominalBayar(nominal));
   }
-
-  // ============================================================
-  // ERROR DIALOG
-  // ============================================================
 
   void _showError(
     BuildContext context, {
@@ -570,9 +663,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                     size: 28,
                   ),
                 ),
-
                 const SizedBox(height: 14),
-
                 Text(
                   title,
                   textAlign: TextAlign.center,
@@ -582,9 +673,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                     color: textPrimary,
                   ),
                 ),
-
                 const SizedBox(height: 7),
-
                 Text(
                   message,
                   textAlign: TextAlign.center,
@@ -594,9 +683,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                     color: textSecondary,
                   ),
                 ),
-
                 const SizedBox(height: 18),
-
                 SizedBox(
                   width: double.infinity,
                   height: 44,

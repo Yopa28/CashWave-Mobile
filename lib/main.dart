@@ -20,15 +20,13 @@ import 'package:cashwave_mobile/presentation/setting/bloc/report/summary/summary
 import 'package:cashwave_mobile/presentation/setting/bloc/sync_order/sync_order_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
-
 import 'core/constants/colors.dart';
 import 'presentation/auth/bloc/login/login_bloc.dart';
 import 'presentation/home/bloc/logout/logout_bloc.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Bloc.observer = MyBlocObserver(); // Untuk logging BLoC
+
   runApp(const MyApp());
 }
 
@@ -59,31 +57,35 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => LoginBloc(AuthRemoteDatasource()),
-        ),
+        BlocProvider(create: (context) => LoginBloc(AuthRemoteDatasource())),
 
         BlocProvider(create: (context) => LogoutBloc(AuthRemoteDatasource())),
         BlocProvider(
-          create: (context) => ProductBloc(ProductRemoteDatasource())
-            ..add(const ProductEvent.fetchLocal()),
+          create: (context) =>
+              ProductBloc(ProductRemoteDatasource())
+                ..add(const ProductEvent.fetchLocal()),
         ),
         BlocProvider(create: (context) => CheckoutBloc()),
         BlocProvider(create: (context) => OrderBloc()),
         BlocProvider(create: (context) => HistoryBloc()),
         BlocProvider(
-            create: (context) => SyncOrderBloc(OrderRemoteDatasource())),
+          create: (context) => SyncOrderBloc(OrderRemoteDatasource()),
+        ),
         BlocProvider(
-            create: (context) => CategoryBloc(ProductRemoteDatasource())),
+          create: (context) => CategoryBloc(ProductRemoteDatasource()),
+        ),
         BlocProvider(
-            create: (context) =>
-                DraftOrderBloc(ProductLocalDatasource.instance)),
+          create: (context) => DraftOrderBloc(ProductLocalDatasource.instance),
+        ),
         BlocProvider(
-            create: (context) => SummaryBloc(ReportRemoteDatasource())),
+          create: (context) => SummaryBloc(ReportRemoteDatasource()),
+        ),
         BlocProvider(
-            create: (context) => ProductSalesBloc(ReportRemoteDatasource())),
+          create: (context) => ProductSalesBloc(ReportRemoteDatasource()),
+        ),
         BlocProvider(
-            create: (context) => CloseCashierBloc(ReportRemoteDatasource())),
+          create: (context) => CloseCashierBloc(ReportRemoteDatasource()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -91,8 +93,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
           useMaterial3: true,
-          textTheme:
-              GoogleFonts.quicksandTextTheme(Theme.of(context).textTheme),
+          textTheme: GoogleFonts.quicksandTextTheme(
+            Theme.of(context).textTheme,
+          ),
           appBarTheme: AppBarTheme(
             color: AppColors.primary,
             elevation: 0,
@@ -120,7 +123,8 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Scaffold(
-                  body: Center(child: CircularProgressIndicator()));
+                body: Center(child: CircularProgressIndicator()),
+              );
             }
 
             if (snapshot.hasData && snapshot.data == true) {

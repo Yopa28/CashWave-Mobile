@@ -7,9 +7,10 @@ import '../models/response/summary_response_model.dart';
 import 'auth_local_datasource.dart';
 
 class ReportRemoteDatasource {
-  /// 🔹 GET Summary Report
   Future<Either<String, SummaryResponseModel>> getSummary(
-      String startDate, String endDate) async {
+    String startDate,
+    String endDate,
+  ) async {
     try {
       final authData = await AuthLocalDatasource().getAuthData();
       final token = authData?.token;
@@ -20,7 +21,8 @@ class ReportRemoteDatasource {
 
       final response = await http.get(
         Uri.parse(
-          '${Variables.baseUrl}/api/reports/summary?start_date=$startDate&end_date=$endDate',
+          '${Variables.baseUrl}/reports/summary'
+          '?start_date=$startDate&end_date=$endDate',
         ),
         headers: {
           'Authorization': 'Bearer $token',
@@ -30,17 +32,18 @@ class ReportRemoteDatasource {
 
       if (response.statusCode == 200) {
         return right(SummaryResponseModel.fromJson(response.body));
-      } else {
-        return left('Error ${response.statusCode}: ${response.body}');
       }
+
+      return left('Error ${response.statusCode}: ${response.body}');
     } catch (e) {
       return left('Connection error: $e');
     }
   }
 
-  /// 🔹 GET Product Sales
   Future<Either<String, ProductSalesResponseModel>> getProductSales(
-      String startDate, String endDate) async {
+    String startDate,
+    String endDate,
+  ) async {
     try {
       final authData = await AuthLocalDatasource().getAuthData();
       final token = authData?.token;
@@ -51,7 +54,8 @@ class ReportRemoteDatasource {
 
       final response = await http.get(
         Uri.parse(
-          '${Variables.baseUrl}/api/reports/product-sales?start_date=$startDate&end_date=$endDate',
+          '${Variables.baseUrl}/reports/product-sales'
+          '?start_date=$startDate&end_date=$endDate',
         ),
         headers: {
           'Authorization': 'Bearer $token',
@@ -61,15 +65,14 @@ class ReportRemoteDatasource {
 
       if (response.statusCode == 200) {
         return right(ProductSalesResponseModel.fromJson(response.body));
-      } else {
-        return left('Error ${response.statusCode}: ${response.body}');
       }
+
+      return left('Error ${response.statusCode}: ${response.body}');
     } catch (e) {
       return left('Connection error: $e');
     }
   }
 
-  /// 🔹 Close Cashier
   Future<Either<String, String>> closeCashier() async {
     try {
       final authData = await AuthLocalDatasource().getAuthData();
@@ -80,7 +83,7 @@ class ReportRemoteDatasource {
       }
 
       final response = await http.get(
-        Uri.parse('${Variables.baseUrl}/api/reports/close-cashier'),
+        Uri.parse('${Variables.baseUrl}/reports/close-cashier'),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -89,9 +92,9 @@ class ReportRemoteDatasource {
 
       if (response.statusCode == 200) {
         return right('Success');
-      } else {
-        return left('Error ${response.statusCode}: ${response.body}');
       }
+
+      return left('Error ${response.statusCode}: ${response.body}');
     } catch (e) {
       return left('Connection error: $e');
     }

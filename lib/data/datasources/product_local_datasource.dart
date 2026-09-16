@@ -17,15 +17,15 @@ class ProductLocalDatasource {
 
   static Database? _database;
 
+  // =========================
+  // DATABASE
+  // =========================
+
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = dbPath + filePath;
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-    );
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -57,7 +57,6 @@ class ProductLocalDatasource {
       )
     ''');
 
-    //categories
     await db.execute('''
       CREATE TABLE categories (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -98,201 +97,335 @@ class ProductLocalDatasource {
     ''');
   }
 
-  //insert all categories
+  Future<Database> get database async {
+    if (_database != null) {
+      return _database!;
+    }
+
+    _database = await _initDB('pos13.db');
+
+    return _database!;
+  }
+
+  // =========================
+  // CATEGORY
+  // =========================
+
   Future<void> insertAllCategories(List<Category> categories) async {
     final db = await instance.database;
-    for (var category in categories) {
+
+    for (final category in categories) {
       await db.insert('categories', category.toMap());
     }
   }
 
-  //delete all categories
   Future<void> removeAllCategories() async {
     final db = await instance.database;
+
     await db.delete('categories');
   }
 
-  //get all categories
   Future<List<Category>> getAllCategories() async {
     final db = await instance.database;
+
     final result = await db.query('categories');
 
     return result.map((e) => Category.fromLocal(e)).toList();
   }
 
-  //save order
-  Future<int> saveOrder(OrderModel order) async {
-    final db = await instance.database;
-    int id = await db.insert('orders', order.toMapForLocal());
-    for (var orderItem in order.orders) {
-      await db.insert('order_items', orderItem.toMapForLocal(id));
-    }
-    return id;
-  }
+  // =========================
+  // PRODUCT
+  // =========================
 
-  //save draft order
-  Future<int> saveDraftOrder(DraftOrderModel order) async {
-    final db = await instance.database;
-    int id = await db.insert('draft_orders', order.toMapForLocal());
-    for (var orderItem in order.orders) {
-      await db.insert('draft_order_items', orderItem.toMapForLocal(id));
-    }
-    return id;
-  }
-
-  //get all draft order
-  Future<List<DraftOrderModel>> getAllDraftOrder() async {
-    final db = await instance.database;
-    final result = await db.query('draft_orders', orderBy: 'id ASC');
-
-    List<DraftOrderModel> results = await Future.wait(result.map((item) async {
-      // Your asynchronous operation here
-      final draftOrderItem =
-          await getDraftOrderItemByOrderId(item['id'] as int);
-      return DraftOrderModel.newFromLocalMap(item, draftOrderItem);
-    }));
-    return results;
-  }
-
-  //get draft order item by id order
-  Future<List<DraftOrderItem>> getDraftOrderItemByOrderId(int idOrder) async {
-    final db = await instance.database;
-    final result =
-        await db.query('draft_order_items', where: 'id_draft_order = $idOrder');
-
-    List<DraftOrderItem> results = await Future.wait(result.map((item) async {
-      // Your asynchronous operation here
-      final product = await getProductById(item['id_product'] as int);
-      return DraftOrderItem(
-          product: product!, quantity: item['quantity'] as int);
-    }));
-    return results;
-  }
-
-  //remove draft order by id
-  Future<void> removeDraftOrderById(int id) async {
-    final db = await instance.database;
-    await db.delete('draft_orders', where: 'id = ?', whereArgs: [id]);
-    await db.delete('draft_order_items',
-        where: 'id_draft_order = ?', whereArgs: [id]);
-  }
-
-  //get order by isSync = 0
-  Future<List<OrderModel>> getOrderByIsSync() async {
-    final db = await instance.database;
-    final result = await db.query('orders', where: 'is_sync = 0');
-
-    return result.map((e) => OrderModel.fromLocalMap(e)).toList();
-  }
-
-  //get order item by id order
-  Future<List<OrderItemModel>> getOrderItemByOrderIdLocal(int idOrder) async {
-    final db = await instance.database;
-    final result = await db.query('order_items', where: 'id_order = $idOrder');
-
-    return result.map((e) => OrderItem.fromMapLocal(e)).toList();
-  }
-
-  //update isSync order by id
-  Future<int> updateIsSyncOrderById(int id) async {
-    final db = await instance.database;
-    return await db.update('orders', {'is_sync': 1},
-        where: 'id = ?', whereArgs: [id]);
-  }
-
-  //get all orders
-  Future<List<OrderModel>> getAllOrder() async {
-    final db = await instance.database;
-    final result = await db.query('orders', orderBy: 'id DESC');
-
-    List<OrderModel> results = await Future.wait(result.map((item) async {
-      // Your asynchronous operation here
-      final orderItem = await getOrderItemByOrderId(item['id'] as int);
-      return OrderModel.newFromLocalMap(item, orderItem);
-    }));
-    return results;
-    // return result.map((e) {
-    //   return OrderModel.fromLocalMap(e);
-    // }).toList();
-  }
-
-  //get order item by id order
-  Future<List<OrderItem>> getOrderItemByOrderId(int idOrder) async {
-    final db = await instance.database;
-    final result = await db.query('order_items', where: 'id_order = $idOrder');
-
-    List<OrderItem> results = await Future.wait(result.map((item) async {
-      final product = await getProductById(item['id_product'] as int);
-
-      if (product == null) {
-        // Bisa skip, atau kasih dummy product
-        return OrderItem(
-          product: Product(
-            id: 0,
-            productId: 0,
-            name: 'Produk tidak ditemukan',
-            price: 0,
-            stock: 0,
-            category: '',
-            categoryId: 0,
-            image: '',
-          ),
-          quantity: item['quantity'] as int,
-        );
-      }
-
-      return OrderItem(product: product, quantity: item['quantity'] as int);
-    }));
-    return results;
-  }
-
-
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-
-    _database = await _initDB('pos13.db');
-    return _database!;
-  }
-
-  //remove all data product
   Future<void> removeAllProduct() async {
     final db = await instance.database;
+
     await db.delete(tableProducts);
   }
 
-  //insert data product from list product
   Future<void> insertAllProduct(List<Product> products) async {
     final db = await instance.database;
-    for (var product in products) {
+
+    for (final product in products) {
       await db.insert(tableProducts, product.toLocalMap());
     }
   }
 
-  //isert data product
   Future<Product> insertProduct(Product product) async {
     final db = await instance.database;
-    int id = await db.insert(tableProducts, product.toMap());
+
+    final id = await db.insert(tableProducts, product.toMap());
+
     return product.copyWith(id: id);
   }
 
-  //get all data product
   Future<List<Product>> getAllProduct() async {
     final db = await instance.database;
+
     final result = await db.query(tableProducts);
 
     return result.map((e) => Product.fromMap(e)).toList();
   }
 
-  //get product by id
   Future<Product?> getProductById(int id) async {
     final db = await instance.database;
-    final result =
-        await db.query(tableProducts, where: 'product_id = ?', whereArgs: [id]);
 
-    if (result.isEmpty) {
-      return null;
+    // Coba cari berdasarkan product_id dari API
+    var result = await db.query(
+      tableProducts,
+      where: 'product_id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+
+    if (result.isNotEmpty) {
+      return Product.fromMap(result.first);
     }
 
-    return Product.fromMap(result.first);
+    // Kalau tidak ketemu, coba berdasarkan id lokal SQLite
+    result = await db.query(
+      tableProducts,
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+
+    if (result.isNotEmpty) {
+      return Product.fromMap(result.first);
+    }
+
+    return null;
+  }
+
+  // =========================
+  // ORDER
+  // =========================
+
+  Future<int> saveOrder(OrderModel order) async {
+    final db = await instance.database;
+
+    final id = await db.insert('orders', order.toMapForLocal());
+
+    for (final orderItem in order.orders) {
+      await db.insert('order_items', orderItem.toMapForLocal(id));
+    }
+
+    return id;
+  }
+
+  // Get order yang belum sync
+  Future<List<OrderModel>> getOrderByIsSync() async {
+    final db = await instance.database;
+
+    final result = await db.query(
+      'orders',
+      where: 'is_sync = ?',
+      whereArgs: [0],
+    );
+
+    return result.map((e) => OrderModel.fromLocalMap(e)).toList();
+  }
+
+  // Get semua order
+  Future<List<OrderModel>> getAllOrder() async {
+    final db = await instance.database;
+
+    final result = await db.query('orders', orderBy: 'id DESC');
+
+    final results = await Future.wait(
+      result.map((item) async {
+        final orderId = item['id'] as int;
+
+        final orderItems = await getOrderItemByOrderId(orderId);
+
+        return OrderModel.newFromLocalMap(item, orderItems);
+      }),
+    );
+
+    return results;
+  }
+
+  // Get item order berdasarkan ID order
+  Future<List<OrderItem>> getOrderItemByOrderId(int idOrder) async {
+    final db = await instance.database;
+
+    final result = await db.query(
+      'order_items',
+      where: 'id_order = ?',
+      whereArgs: [idOrder],
+    );
+
+    final results = <OrderItem>[];
+
+    for (final item in result) {
+      final productId = item['id_product'] as int?;
+      final quantity = item['quantity'] as int? ?? 0;
+
+      if (productId == null) {
+        continue;
+      }
+
+      final product = await getProductById(productId);
+
+      if (product == null) {
+        print(
+          '[Order] Product tidak ditemukan: '
+          'productId=$productId, orderId=$idOrder',
+        );
+
+        continue;
+      }
+
+      results.add(OrderItem(product: product, quantity: quantity));
+    }
+
+    return results;
+  }
+
+  // Method ini digunakan SyncOrderBloc
+  Future<List<OrderItemModel>> getOrderItemByOrderIdLocal(int idOrder) async {
+    final db = await instance.database;
+
+    final result = await db.query(
+      'order_items',
+      where: 'id_order = ?',
+      whereArgs: [idOrder],
+    );
+
+    return result.map((e) => OrderItem.fromMapLocal(e)).toList();
+  }
+
+  // Update status sync
+  Future<int> updateIsSyncOrderById(int id) async {
+    final db = await instance.database;
+
+    return await db.update(
+      'orders',
+      {'is_sync': 1},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // =========================
+  // DRAFT ORDER
+  // =========================
+
+  Future<int> saveDraftOrder(DraftOrderModel order) async {
+    final db = await instance.database;
+
+    final id = await db.insert('draft_orders', order.toMapForLocal());
+
+    for (final orderItem in order.orders) {
+      await db.insert('draft_order_items', orderItem.toMapForLocal(id));
+    }
+
+    return id;
+  }
+
+  // Get semua draft
+  Future<List<DraftOrderModel>> getAllDraftOrder() async {
+    final db = await instance.database;
+
+    final result = await db.query('draft_orders', orderBy: 'id ASC');
+
+    final results = await Future.wait(
+      result.map((item) async {
+        final draftOrderId = item['id'] as int;
+
+        final draftOrderItems = await getDraftOrderItemByOrderId(draftOrderId);
+
+        return DraftOrderModel.newFromLocalMap(item, draftOrderItems);
+      }),
+    );
+
+    return results;
+  }
+
+  // Get item draft berdasarkan ID draft
+  Future<List<DraftOrderItem>> getDraftOrderItemByOrderId(int idOrder) async {
+    final db = await instance.database;
+
+    final result = await db.query(
+      'draft_order_items',
+      where: 'id_draft_order = ?',
+      whereArgs: [idOrder],
+    );
+
+    final results = <DraftOrderItem>[];
+
+    for (final item in result) {
+      final productId = item['id_product'] as int?;
+      final quantity = item['quantity'] as int? ?? 0;
+
+      if (productId == null) {
+        print(
+          '[DraftOrder] id_product null '
+          'draftOrderId=$idOrder',
+        );
+
+        continue;
+      }
+
+      final product = await getProductById(productId);
+
+      if (product == null) {
+        print(
+          '[DraftOrder] Product tidak ditemukan: '
+          'productId=$productId, '
+          'draftOrderId=$idOrder',
+        );
+
+        throw Exception('Product dengan ID $productId tidak ditemukan');
+      }
+
+      results.add(DraftOrderItem(product: product, quantity: quantity));
+    }
+
+    return results;
+  }
+
+  // Hapus draft
+  Future<void> removeDraftOrderById(int id) async {
+    final db = await instance.database;
+
+    await db.delete('draft_orders', where: 'id = ?', whereArgs: [id]);
+
+    await db.delete(
+      'draft_order_items',
+      where: 'id_draft_order = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> debugDraftOrder() async {
+    final db = await instance.database;
+
+    final products = await db.query(tableProducts);
+
+    final draftItems = await db.query('draft_order_items');
+
+    print('========== PRODUCTS ==========');
+
+    for (final product in products) {
+      print(product);
+    }
+
+    print('====== DRAFT ORDER ITEMS ======');
+
+    for (final item in draftItems) {
+      print(item);
+    }
+
+    print('================================');
+  }
+
+  Future<void> clearDraftOrders() async {
+    final db = await instance.database;
+
+    await db.delete('draft_order_items');
+    await db.delete('draft_orders');
+
+    print('[DraftOrder] Semua draft berhasil dihapus');
   }
 }

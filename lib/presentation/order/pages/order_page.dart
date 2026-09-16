@@ -497,7 +497,7 @@ class _OrderPageState extends State<OrderPage> {
                       'Total Pembayaran',
                       style: TextStyle(
                         color: textSecondary,
-                        fontSize: 12,
+                        fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

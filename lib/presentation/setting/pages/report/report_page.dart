@@ -8,11 +8,12 @@ import 'package:intl/intl.dart';
 import 'package:cashwave_mobile/core/extensions/build_context_ext.dart';
 import 'package:cashwave_mobile/core/extensions/int_ext.dart';
 
+import 'package:cashwave_mobile/data/models/response/product_sales_report.dart';
 import 'package:cashwave_mobile/data/models/response/summary_response_model.dart';
+
 import 'package:cashwave_mobile/presentation/setting/bloc/report/product_sales/product_sales_bloc.dart';
 import 'package:cashwave_mobile/presentation/setting/bloc/report/summary/summary_bloc.dart';
 
-import '../../../../data/models/response/product_sales_report.dart';
 import 'utils/helper_pdf_service.dart';
 import 'utils/invoice.dart';
 
@@ -59,7 +60,12 @@ class _ReportPageState extends State<ReportPage> {
 
   Summary? summary;
 
+  // ============================================================
+  // STATE
+  // ============================================================
+
   bool isFiltering = false;
+  bool isExporting = false;
 
   // ============================================================
   // INIT
@@ -69,7 +75,9 @@ class _ReportPageState extends State<ReportPage> {
   void initState() {
     super.initState();
 
-    _loadReport();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadReport();
+    });
   }
 
   // ============================================================
@@ -182,24 +190,47 @@ class _ReportPageState extends State<ReportPage> {
   // ============================================================
 
   Future<void> _generatePdf() async {
+    if (isExporting) return;
+
     if (productSales.isEmpty || summary == null) {
       _showSnackBar('Data laporan belum tersedia.', isError: true);
 
       return;
     }
 
+    setState(() {
+      isExporting = true;
+    });
+
     try {
       log('Generating PDF report...');
 
-      final pdfFile = await Invoice.generate(productSales, summary!);
+      final pdfFile = await Invoice.generate(
+        productSales,
+        summary!,
+        startDate: selectedStartDate,
+        endDate: selectedEndDate,
+      );
 
       log('PDF file: $pdfFile');
 
-      HelperPdfService.openFile(pdfFile);
-    } catch (e) {
-      log('Generate PDF error: $e');
+      await HelperPdfService.openFile(pdfFile);
+
+      if (!mounted) return;
+
+      _showSnackBar('Laporan PDF berhasil dibuat.');
+    } catch (e, stackTrace) {
+      log('Generate PDF error: $e', stackTrace: stackTrace);
+
+      if (!mounted) return;
 
       _showSnackBar('Gagal membuat PDF laporan.', isError: true);
+    } finally {
+      if (!mounted) return;
+
+      setState(() {
+        isExporting = false;
+      });
     }
   }
 
@@ -257,58 +288,73 @@ class _ReportPageState extends State<ReportPage> {
     required VoidCallback onTap,
   }) {
     return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(13),
-          decoration: BoxDecoration(
-            color: const Color(0xffF7F9F8),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: borderColor),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: primaryLight,
-                  borderRadius: BorderRadius.circular(12),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.all(13),
+            decoration: BoxDecoration(
+              color: background,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: borderColor),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: primaryLight,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.calendar_today_rounded,
+                    color: primary,
+                    size: 18,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.calendar_today_rounded,
-                  color: primary,
+
+                const SizedBox(width: 10),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        label,
+                        style: const TextStyle(
+                          color: textSecondary,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+
+                      const SizedBox(height: 3),
+
+                      Text(
+                        DateFormat('dd MMM yyyy').format(date),
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: textPrimary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(width: 4),
+
+                const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: textSecondary,
                   size: 18,
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: const TextStyle(
-                        color: textSecondary,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      DateFormat('dd MMM yyyy').format(date),
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: textPrimary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -451,7 +497,7 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   // ============================================================
-  // REVENUE
+  // REVENUE CARD
   // ============================================================
 
   Widget _buildRevenueCard(Summary data) {
@@ -514,7 +560,7 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   // ============================================================
-  // SOLD ITEM
+  // SOLD ITEM CARD
   // ============================================================
 
   Widget _buildSoldItemCard(Summary data) {
@@ -584,9 +630,6 @@ class _ReportPageState extends State<ReportPage> {
         builder: (context, state) {
           return state.maybeWhen(
             success: (data) {
-              summary = data.data;
-              isFiltering = false;
-
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -638,7 +681,9 @@ class _ReportPageState extends State<ReportPage> {
                   fontWeight: FontWeight.w800,
                 ),
               ),
+
               SizedBox(height: 3),
+
               Text(
                 'Detail produk yang terjual',
                 style: TextStyle(color: textSecondary, fontSize: 11),
@@ -691,9 +736,6 @@ class _ReportPageState extends State<ReportPage> {
             builder: (context, state) {
               return state.maybeWhen(
                 success: (data) {
-                  productSales = data.data;
-                  isFiltering = false;
-
                   if (data.data.isEmpty) {
                     return _buildEmptyProductSales();
                   }
@@ -721,7 +763,7 @@ class _ReportPageState extends State<ReportPage> {
                           vertical: 13,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xffF7F9F8),
+                          color: background,
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Row(
@@ -932,16 +974,14 @@ class _ReportPageState extends State<ReportPage> {
         height: tableHeight + itemHeight,
         child: hdt.HorizontalDataTable(
           leftHandSideColumnWidth: 58,
-
           rightHandSideColumnWidth: 558,
-
           isFixedHeader: true,
 
           headerWidgets: _getTitleHeaderWidget(),
 
-          // ====================================================
+          // ==================================================
           // LEFT COLUMN
-          // ====================================================
+          // ==================================================
           leftSideItemBuilder: (context, index) {
             return Container(
               width: 58,
@@ -959,49 +999,42 @@ class _ReportPageState extends State<ReportPage> {
             );
           },
 
-          // ====================================================
+          // ==================================================
           // RIGHT COLUMN
-          // ====================================================
+          // ==================================================
           rightSideItemBuilder: (context, index) {
             final item = data.data[index];
 
-            final int totalPrice =
-                int.tryParse(item.totalPrice.toString()) ?? 0;
+            final int price = int.tryParse(item.productPrice.toString()) ?? 0;
 
             final int quantity =
                 int.tryParse(item.totalQuantity.toString()) ?? 0;
+
+            final int totalPrice =
+                int.tryParse(item.totalPrice.toString()) ?? 0;
 
             return Container(
               color: Colors.white,
               child: Row(
                 children: [
-                  // ============================================
                   // ID
-                  // ============================================
 
                   _buildTableCell(width: 58, value: item.productId.toString()),
 
-                  // ============================================
                   // PRODUCT
-                  // ============================================
-                  _buildTableCell(width: 140, value: item.productName),
-
-                  // ============================================
-                  // PRICE
-                  // ============================================
                   _buildTableCell(
                     width: 140,
-                    value: item.productPrice.currencyFormatRp,
+                    value: item.productName,
+                    alignLeft: true,
                   ),
 
-                  // ============================================
+                  // PRICE
+                  _buildTableCell(width: 140, value: price.currencyFormatRp),
+
                   // QUANTITY
-                  // ============================================
                   _buildTableCell(width: 80, value: quantity.toString()),
 
-                  // ============================================
                   // TOTAL
-                  // ============================================
                   _buildTableCell(
                     width: 140,
                     value: totalPrice.currencyFormatRp,
@@ -1038,17 +1071,18 @@ class _ReportPageState extends State<ReportPage> {
     required double width,
     required String value,
     bool isTotal = false,
+    bool alignLeft = false,
   }) {
     return Container(
       width: width,
       height: 52,
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      alignment: Alignment.center,
+      alignment: alignLeft ? Alignment.centerLeft : Alignment.center,
       child: Text(
         value,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.center,
+        textAlign: alignLeft ? TextAlign.left : TextAlign.center,
         style: TextStyle(
           color: isTotal ? primary : textPrimary,
           fontSize: 10,
@@ -1059,12 +1093,10 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   // ============================================================
-  // EXPORT BOTTOM BUTTON
+  // EXPORT BUTTON
   // ============================================================
 
   Widget _buildExportButton() {
-    final bool canExport = productSales.isNotEmpty && summary != null;
-
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
       decoration: BoxDecoration(
@@ -1072,7 +1104,7 @@ class _ReportPageState extends State<ReportPage> {
         border: const Border(top: BorderSide(color: borderColor)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 15,
             offset: const Offset(0, -4),
           ),
@@ -1082,22 +1114,42 @@ class _ReportPageState extends State<ReportPage> {
         top: false,
         child: SizedBox(
           width: double.infinity,
-          height: 52,
-          child: OutlinedButton.icon(
-            onPressed: canExport ? _generatePdf : null,
-            icon: const Icon(Icons.picture_as_pdf_outlined, size: 20),
-            label: const Text(
-              'Export Laporan PDF',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-            ),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: primary,
-              disabledForegroundColor: textSecondary,
-              side: BorderSide(color: canExport ? primary : borderColor),
+          height: 54,
+          child: ElevatedButton(
+            onPressed: isExporting ? null : _generatePdf,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primary,
+              disabledBackgroundColor: primary.withOpacity(0.6),
+              foregroundColor: Colors.white,
+              disabledForegroundColor: Colors.white70,
+              elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
+            child: isExporting
+                ? const SizedBox(
+                    width: 21,
+                    height: 21,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.picture_as_pdf_rounded, size: 21),
+                      SizedBox(width: 9),
+                      Text(
+                        'Export Laporan PDF',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ),
@@ -1110,108 +1162,188 @@ class _ReportPageState extends State<ReportPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: background,
+    return MultiBlocListener(
+      listeners: [
+        // ======================================================
+        // SUMMARY LISTENER
+        // ======================================================
 
-      // ========================================================
-      // APP BAR
-      // ========================================================
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
+        BlocListener<SummaryBloc, SummaryState>(
+          listener: (context, state) {
+            state.maybeWhen(
+              success: (data) {
+                if (!mounted) return;
 
-        leading: IconButton(
-          onPressed: () {
-            context.pop();
+                setState(() {
+                  summary = data.data;
+                  isFiltering = false;
+                });
+              },
+              error: (message) {
+                if (!mounted) return;
+
+                setState(() {
+                  isFiltering = false;
+                });
+              },
+              orElse: () {},
+            );
           },
-          icon: const Icon(Icons.arrow_back_rounded, color: textPrimary),
         ),
 
-        titleSpacing: 0,
+        // ======================================================
+        // PRODUCT SALES LISTENER
+        // ======================================================
+        BlocListener<ProductSalesBloc, ProductSalesState>(
+          listener: (context, state) {
+            state.maybeWhen(
+              success: (data) {
+                if (!mounted) return;
 
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Report',
-              style: TextStyle(
-                color: textPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
+                setState(() {
+                  productSales = data.data;
+                  isFiltering = false;
+                });
+              },
+              error: (message) {
+                if (!mounted) return;
+
+                setState(() {
+                  isFiltering = false;
+                });
+              },
+              orElse: () {},
+            );
+          },
+        ),
+      ],
+
+      child: Scaffold(
+        backgroundColor: background,
+
+        // ======================================================
+        // APP BAR
+        // ======================================================
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+
+          leading: IconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: const Icon(Icons.arrow_back_rounded, color: textPrimary),
+          ),
+
+          titleSpacing: 0,
+
+          title: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Report',
+                style: TextStyle(
+                  color: textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
-            ),
 
-            SizedBox(height: 2),
+              SizedBox(height: 2),
 
-            Text(
-              'Laporan penjualan cafe',
-              style: TextStyle(
-                color: textSecondary,
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
+              Text(
+                'Laporan penjualan cafe',
+                style: TextStyle(
+                  color: textSecondary,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+
+          actions: [
+            Container(
+              margin: const EdgeInsets.only(right: 12),
+              decoration: BoxDecoration(
+                color: primaryLight,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: IconButton(
+                onPressed: isExporting ? null : _generatePdf,
+                icon: isExporting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: primary,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.picture_as_pdf_outlined,
+                        color: primary,
+                        size: 21,
+                      ),
+                tooltip: 'Export PDF',
               ),
             ),
           ],
         ),
 
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(
-              color: primaryLight,
-              borderRadius: BorderRadius.circular(12),
+        // ======================================================
+        // BODY
+        // ======================================================
+        body: RefreshIndicator(
+          color: primary,
+
+          onRefresh: () async {
+            if (isFiltering) return;
+
+            setState(() {
+              isFiltering = true;
+              summary = null;
+              productSales = [];
+            });
+
+            _loadReport();
+          },
+
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
             ),
-            child: IconButton(
-              onPressed: _generatePdf,
-              icon: const Icon(
-                Icons.picture_as_pdf_outlined,
-                color: primary,
-                size: 21,
-              ),
-              tooltip: 'Export PDF',
+
+            padding: const EdgeInsets.fromLTRB(16, 18, 16, 110),
+
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+
+              children: [
+                // FILTER
+
+                _buildFilterSection(),
+
+                const SizedBox(height: 18),
+
+                // SUMMARY
+                _buildSummaryCard(),
+
+                const SizedBox(height: 18),
+
+                // PRODUCT SALES
+                _buildProductSalesCard(),
+              ],
             ),
-          ),
-        ],
-      ),
-
-      // ========================================================
-      // BODY
-      // ========================================================
-      body: RefreshIndicator(
-        color: primary,
-        onRefresh: () async {
-          _loadReport();
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
-          ),
-          padding: const EdgeInsets.fromLTRB(16, 18, 16, 110),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // FILTER
-              _buildFilterSection(),
-
-              const SizedBox(height: 18),
-
-              // SUMMARY
-              _buildSummaryCard(),
-
-              const SizedBox(height: 18),
-
-              // PRODUCT SALES
-              _buildProductSalesCard(),
-            ],
           ),
         ),
-      ),
 
-      // ========================================================
-      // EXPORT
-      // ========================================================
-      bottomNavigationBar: _buildExportButton(),
+        // ======================================================
+        // EXPORT
+        // ======================================================
+        bottomNavigationBar: _buildExportButton(),
+      ),
     );
   }
 }

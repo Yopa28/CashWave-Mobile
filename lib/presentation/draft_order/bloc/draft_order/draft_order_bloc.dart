@@ -11,12 +11,12 @@ part 'draft_order_state.dart';
 
 class DraftOrderBloc extends Bloc<DraftOrderEvent, DraftOrderState> {
   final ProductLocalDatasource productLocalDatasource;
-  DraftOrderBloc(
-    this.productLocalDatasource,
-  ) : super(const _Initial()) {
+  DraftOrderBloc(this.productLocalDatasource) : super(const _Initial()) {
     on<_GetAllDraftOrder>((event, emit) async {
       emit(const _Loading());
+
       final result = await productLocalDatasource.getAllDraftOrder();
+
       emit(DraftOrderState.success(result));
     });
   }
