@@ -41,21 +41,23 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: background,
+      backgroundColor: colorScheme.surface,
 
       // ========================================================
       // APP BAR
       // ========================================================
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: colorScheme.surface,
+        surfaceTintColor: colorScheme.surface,
         elevation: 0,
         centerTitle: false,
 
         titleSpacing: 20,
 
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -63,7 +65,7 @@ class _HistoryPageState extends State<HistoryPage> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
-                color: textPrimary,
+                color: colorScheme.onSurface,
               ),
             ),
             SizedBox(height: 2),
@@ -72,7 +74,7 @@ class _HistoryPageState extends State<HistoryPage> {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
-                color: textSecondary,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ],

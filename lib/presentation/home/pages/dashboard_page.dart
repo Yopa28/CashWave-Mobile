@@ -62,8 +62,10 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: background,
+      backgroundColor: colorScheme.surface,
 
       // ========================================================
       // PAGE
@@ -82,11 +84,15 @@ class _DashboardPageState extends State<DashboardPage> {
   // ============================================================
 
   Widget _buildBottomNavigation() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
 
-        border: const Border(top: BorderSide(color: border, width: 0.7)),
+        border: Border(
+          top: BorderSide(color: colorScheme.outlineVariant, width: 0.7),
+        ),
 
         boxShadow: [
           BoxShadow(
@@ -158,6 +164,7 @@ class _DashboardPageState extends State<DashboardPage> {
     required String label,
   }) {
     final bool isActive = _selectedIndex == index;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -176,7 +183,7 @@ class _DashboardPageState extends State<DashboardPage> {
         padding: const EdgeInsets.symmetric(vertical: 7),
 
         decoration: BoxDecoration(
-          color: isActive ? primaryLight : Colors.transparent,
+          color: isActive ? colorScheme.primaryContainer : Colors.transparent,
 
           borderRadius: BorderRadius.circular(14),
         ),
@@ -203,7 +210,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
                 size: 23,
 
-                color: isActive ? primary : inactive,
+                color: isActive ? colorScheme.primary : inactive,
               ),
             ),
 
@@ -216,7 +223,7 @@ class _DashboardPageState extends State<DashboardPage> {
               duration: const Duration(milliseconds: 180),
 
               style: TextStyle(
-                color: isActive ? primary : inactive,
+                color: isActive ? colorScheme.primary : inactive,
 
                 fontSize: 10,
 

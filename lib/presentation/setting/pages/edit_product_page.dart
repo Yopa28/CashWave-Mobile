@@ -185,11 +185,11 @@ class _EditProductPageState extends State<EditProductPage> {
         ),
       ],
       child: Scaffold(
-        backgroundColor: const Color(0xffF7F9F8),
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          surfaceTintColor: Theme.of(context).colorScheme.surface,
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
             icon: const Icon(
@@ -327,11 +327,13 @@ class _EditProductPageState extends State<EditProductPage> {
   }
 
   Widget _buildImageSection() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: const Color(0xffE5EBE8)),
       ),
@@ -413,15 +415,17 @@ class _EditProductPageState extends State<EditProductPage> {
     required IconData icon,
     TextInputType? keyboardType,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: Color(0xff17221E),
+            color: colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 8),
@@ -432,7 +436,7 @@ class _EditProductPageState extends State<EditProductPage> {
             hintText: hint,
             prefixIcon: Icon(icon, size: 20, color: const Color(0xff087A55)),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: colorScheme.surface,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 14,
               vertical: 15,

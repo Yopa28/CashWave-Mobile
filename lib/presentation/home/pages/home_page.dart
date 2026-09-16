@@ -121,17 +121,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: background,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: background,
+        backgroundColor: colorScheme.surface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Menu Cafe',
           style: TextStyle(
-            color: textPrimary,
+            color: colorScheme.onSurface,
             fontSize: 21,
             fontWeight: FontWeight.w700,
             letterSpacing: -0.3,
@@ -151,9 +153,9 @@ class _HomePageState extends State<HomePage> {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: borderColor),
+                  border: Border.all(color: colorScheme.outlineVariant),
                 ),
                 child: IconButton(
                   padding: EdgeInsets.zero,
@@ -375,12 +377,14 @@ class _HomePageState extends State<HomePage> {
     required String title,
     required String subtitle,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: cardColor,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.025),
@@ -407,8 +411,8 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Text(
                   value,
-                  style: const TextStyle(
-                    color: textPrimary,
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
                     fontSize: 19,
                     fontWeight: FontWeight.w800,
                   ),
@@ -416,15 +420,18 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 1),
                 Text(
                   title,
-                  style: const TextStyle(
-                    color: textPrimary,
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   subtitle,
-                  style: const TextStyle(color: textSecondary, fontSize: 9),
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 9,
+                  ),
                 ),
               ],
             ),
@@ -481,12 +488,14 @@ class _HomePageState extends State<HomePage> {
     required String title,
     required String subtitle,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: cardColor,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.025),
@@ -510,8 +519,8 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 9),
           Text(
             value,
-            style: const TextStyle(
-              color: textPrimary,
+            style: TextStyle(
+              color: colorScheme.onSurface,
               fontSize: 20,
               fontWeight: FontWeight.w800,
             ),
@@ -521,8 +530,8 @@ class _HomePageState extends State<HomePage> {
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: textPrimary,
+            style: TextStyle(
+              color: colorScheme.onSurface,
               fontSize: 10,
               fontWeight: FontWeight.w600,
             ),
@@ -532,7 +541,7 @@ class _HomePageState extends State<HomePage> {
             subtitle,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: textSecondary, fontSize: 8),
+            style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 8),
           ),
         ],
       ),
@@ -541,13 +550,14 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildRecentOrders(List<RecentOrder> orders) {
     final visibleOrders = orders.take(5).toList();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.025),
@@ -575,14 +585,14 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(width: 10),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Transaksi Terbaru',
                       style: TextStyle(
-                        color: textPrimary,
+                        color: colorScheme.onSurface,
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                       ),
@@ -590,7 +600,10 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(height: 2),
                     Text(
                       'Aktivitas transaksi terbaru',
-                      style: TextStyle(color: textSecondary, fontSize: 9),
+                      style: TextStyle(
+                        color: colorScheme.onSurfaceVariant,
+                        fontSize: 9,
+                      ),
                     ),
                   ],
                 ),
@@ -615,6 +628,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildRecentOrderItem(RecentOrder order) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       children: [
         Container(
@@ -641,8 +656,8 @@ class _HomePageState extends State<HomePage> {
                     : order.orderNumber,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: textPrimary,
+                style: TextStyle(
+                  color: colorScheme.onSurface,
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                 ),
@@ -652,7 +667,10 @@ class _HomePageState extends State<HomePage> {
                 '${order.totalItem} item • ${_paymentLabel(order.paymentMethod)}',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: textSecondary, fontSize: 9),
+                style: TextStyle(
+                  color: colorScheme.onSurfaceVariant,
+                  fontSize: 9,
+                ),
               ),
             ],
           ),
@@ -663,8 +681,8 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text(
               _formatRupiah(order.totalPrice),
-              style: const TextStyle(
-                color: textPrimary,
+              style: TextStyle(
+                color: colorScheme.onSurface,
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
               ),
@@ -673,7 +691,10 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 3),
               Text(
                 _formatTime(order.transactionTime!),
-                style: const TextStyle(color: textSecondary, fontSize: 8),
+                style: TextStyle(
+                  color: colorScheme.onSurfaceVariant,
+                  fontSize: 8,
+                ),
               ),
             ],
           ],
@@ -709,12 +730,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildLoadingBox({required double height, required double radius}) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
       ),
       child: const Center(
         child: SizedBox(
@@ -730,12 +753,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildDashboardError(String message) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
       ),
       child: Row(
         children: [
@@ -757,10 +782,10 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Dashboard tidak tersedia',
                   style: TextStyle(
-                    color: textPrimary,
+                    color: colorScheme.onSurface,
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                   ),
@@ -770,7 +795,10 @@ class _HomePageState extends State<HomePage> {
                   message,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: textSecondary, fontSize: 9),
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 9,
+                  ),
                 ),
               ],
             ),
@@ -887,13 +915,14 @@ class _HomePageState extends State<HomePage> {
     final attentionProducts = [...outOfStockProducts, ...lowStockProducts];
 
     final visibleProducts = attentionProducts.take(4).toList();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.025),
@@ -921,14 +950,14 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(width: 10),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Perhatian Stok',
                       style: TextStyle(
-                        color: textPrimary,
+                        color: colorScheme.onSurface,
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                       ),
@@ -936,7 +965,10 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(height: 2),
                     Text(
                       'Beberapa produk perlu segera dicek',
-                      style: TextStyle(color: textSecondary, fontSize: 10),
+                      style: TextStyle(
+                        color: colorScheme.onSurfaceVariant,
+                        fontSize: 10,
+                      ),
                     ),
                   ],
                 ),
@@ -974,6 +1006,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildStockItem(Product product) {
     final isOutOfStock = product.stock <= 0;
+    final colorScheme = Theme.of(context).colorScheme;
 
     final statusColor = isOutOfStock
         ? const Color(0xffd64545)
@@ -987,7 +1020,7 @@ class _HomePageState extends State<HomePage> {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: background,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -996,9 +1029,9 @@ class _HomePageState extends State<HomePage> {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: borderColor),
+              border: Border.all(color: colorScheme.outlineVariant),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(9),
@@ -1030,8 +1063,8 @@ class _HomePageState extends State<HomePage> {
                   product.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: textPrimary,
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                   ),
@@ -1041,7 +1074,10 @@ class _HomePageState extends State<HomePage> {
                   product.category,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: textSecondary, fontSize: 10),
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 10,
+                  ),
                 ),
               ],
             ),
@@ -1164,11 +1200,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildSearch() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: cardColor,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.025),
@@ -1254,6 +1292,7 @@ class _HomePageState extends State<HomePage> {
     required String label,
   }) {
     final isActive = currentIndex == index;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
       onTap: () {
@@ -1265,9 +1304,11 @@ class _HomePageState extends State<HomePage> {
         width: 90,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? primary : Colors.white,
+          color: isActive ? primary : colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: isActive ? primary : borderColor),
+          border: Border.all(
+            color: isActive ? primary : colorScheme.outlineVariant,
+          ),
           boxShadow: isActive
               ? [
                   BoxShadow(
@@ -1294,7 +1335,7 @@ class _HomePageState extends State<HomePage> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: isActive ? Colors.white : textPrimary,
+                color: isActive ? Colors.white : colorScheme.onSurface,
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
               ),

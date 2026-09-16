@@ -48,6 +48,8 @@ class CustomDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -57,8 +59,8 @@ class CustomDropdown<T> extends StatelessWidget {
 
         Text(
           label,
-          style: const TextStyle(
-            color: textPrimary,
+          style: TextStyle(
+            color: colorScheme.onSurface,
             fontSize: 13,
             fontWeight: FontWeight.w700,
           ),
@@ -80,7 +82,7 @@ class CustomDropdown<T> extends StatelessWidget {
             width: 30,
             height: 30,
             decoration: BoxDecoration(
-              color: primaryLight,
+              color: colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(9),
             ),
             child: const Icon(
@@ -90,7 +92,7 @@ class CustomDropdown<T> extends StatelessWidget {
             ),
           ),
 
-          dropdownColor: Colors.white,
+          dropdownColor: colorScheme.surfaceContainerHighest,
 
           borderRadius: BorderRadius.circular(16),
 
@@ -112,7 +114,9 @@ class CustomDropdown<T> extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: isSelected ? primary : textPrimary,
+                        color: isSelected
+                            ? colorScheme.primary
+                            : colorScheme.onSurface,
                         fontSize: 13,
                         fontWeight: isSelected
                             ? FontWeight.w700
@@ -131,8 +135,8 @@ class CustomDropdown<T> extends StatelessWidget {
           hint: hint != null
               ? Text(
                   hint!,
-                  style: const TextStyle(
-                    color: textSecondary,
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
@@ -142,7 +146,7 @@ class CustomDropdown<T> extends StatelessWidget {
           decoration: InputDecoration(
             filled: true,
 
-            fillColor: background,
+            fillColor: colorScheme.surface,
 
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 15,

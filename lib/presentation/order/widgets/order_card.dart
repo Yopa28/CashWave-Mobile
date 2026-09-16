@@ -27,13 +27,15 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       margin: padding,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.035),
@@ -53,7 +55,7 @@ class OrderCard extends StatelessWidget {
             child: Container(
               width: 76,
               height: 76,
-              color: imageBackground,
+              color: colorScheme.surface,
               child: CachedNetworkImage(
                 imageUrl: '${Variables.imageBaseUrl}${data.product.image}',
                 width: 76,
@@ -98,10 +100,10 @@ class OrderCard extends StatelessWidget {
                   data.product.name,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: textPrimary,
+                    color: colorScheme.onSurface,
                     height: 1.3,
                   ),
                 ),
@@ -144,15 +146,15 @@ class OrderCard extends StatelessWidget {
                       height: 32,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: primaryLight,
+                        color: colorScheme.primaryContainer,
                         borderRadius: BorderRadius.circular(9),
                       ),
                       child: Text(
                         data.quantity.toString(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
-                          color: primary,
+                          color: colorScheme.onPrimaryContainer,
                         ),
                       ),
                     ),
@@ -189,13 +191,13 @@ class OrderCard extends StatelessWidget {
                 width: 34,
                 height: 34,
                 decoration: BoxDecoration(
-                  color: const Color(0xffFFF3F1),
+                  color: colorScheme.errorContainer,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.delete_outline_rounded,
                   size: 19,
-                  color: Color(0xffD9534F),
+                  color: colorScheme.onErrorContainer,
                 ),
               ),
             ),
@@ -223,10 +225,14 @@ class OrderCard extends StatelessWidget {
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: primaryLight,
+            color: Theme.of(context).colorScheme.primaryContainer,
             borderRadius: BorderRadius.circular(9),
           ),
-          child: Icon(icon, size: 17, color: primary),
+          child: Icon(
+            icon,
+            size: 17,
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
         ),
       ),
     );

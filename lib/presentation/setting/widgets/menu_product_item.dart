@@ -29,12 +29,14 @@ class MenuProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor, width: 1),
+        border: Border.all(color: colorScheme.outlineVariant, width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -58,10 +60,10 @@ class MenuProductItem extends StatelessWidget {
                   data.name,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
-                    color: textPrimary,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
@@ -179,6 +181,8 @@ class MenuProductItem extends StatelessWidget {
   }
 
   void _showDetailDialog(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -188,7 +192,7 @@ class MenuProductItem extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(24),
             ),
             child: Column(
@@ -200,10 +204,10 @@ class MenuProductItem extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Detail Produk',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w800,
-                          color: textPrimary,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ),
@@ -216,13 +220,13 @@ class MenuProductItem extends StatelessWidget {
                         width: 34,
                         height: 34,
                         decoration: BoxDecoration(
-                          color: background,
+                          color: colorScheme.surface,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.close_rounded,
                           size: 19,
-                          color: textSecondary,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ),
@@ -237,7 +241,7 @@ class MenuProductItem extends StatelessWidget {
                     child: Container(
                       width: 150,
                       height: 150,
-                      color: background,
+                      color: colorScheme.surface,
                       child: imageUrl.isEmpty
                           ? const Icon(
                               Icons.fastfood_outlined,

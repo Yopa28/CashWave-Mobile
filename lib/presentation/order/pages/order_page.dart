@@ -80,8 +80,10 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: background,
+      backgroundColor: colorScheme.surface,
 
       // ========================================================
       // APP BAR
@@ -160,8 +162,10 @@ class _OrderPageState extends State<OrderPage> {
   // ============================================================
 
   PreferredSizeWidget _buildAppBar() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppBar(
-      backgroundColor: background,
+      backgroundColor: colorScheme.surface,
 
       surfaceTintColor: Colors.transparent,
 
@@ -180,17 +184,17 @@ class _OrderPageState extends State<OrderPage> {
           }
         },
 
-        icon: const Icon(
+        icon: Icon(
           Icons.arrow_back_ios_new_rounded,
-          color: textPrimary,
+          color: colorScheme.onSurface,
           size: 20,
         ),
       ),
 
-      title: const Text(
+      title: Text(
         'Order',
         style: TextStyle(
-          color: textPrimary,
+          color: colorScheme.onSurface,
           fontSize: 20,
           fontWeight: FontWeight.w700,
           letterSpacing: -0.3,
@@ -207,7 +211,7 @@ class _OrderPageState extends State<OrderPage> {
           height: 42,
 
           decoration: BoxDecoration(
-            color: primaryLight,
+            color: colorScheme.primaryContainer,
 
             borderRadius: BorderRadius.circular(12),
           ),
@@ -221,7 +225,11 @@ class _OrderPageState extends State<OrderPage> {
               _showOpenBillDialog();
             },
 
-            icon: const Icon(Icons.save_outlined, color: primary, size: 21),
+            icon: Icon(
+              Icons.save_outlined,
+              color: colorScheme.onPrimaryContainer,
+              size: 21,
+            ),
           ),
         ),
       ],
@@ -233,15 +241,17 @@ class _OrderPageState extends State<OrderPage> {
   // ============================================================
 
   Widget _buildOrderHeader(int itemCount, int quantity) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
 
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
 
         borderRadius: BorderRadius.circular(14),
 
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
       ),
 
       child: Row(
@@ -307,6 +317,8 @@ class _OrderPageState extends State<OrderPage> {
   // ============================================================
 
   Widget _buildEmptyState() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(30),
@@ -334,12 +346,12 @@ class _OrderPageState extends State<OrderPage> {
 
             const SizedBox(height: 20),
 
-            const Text(
+            Text(
               'Belum Ada Pesanan',
               textAlign: TextAlign.center,
 
               style: TextStyle(
-                color: textPrimary,
+                color: colorScheme.onSurface,
                 fontSize: 17,
                 fontWeight: FontWeight.w700,
               ),
@@ -347,11 +359,15 @@ class _OrderPageState extends State<OrderPage> {
 
             const SizedBox(height: 7),
 
-            const Text(
+            Text(
               'Tambahkan produk dari halaman menu untuk membuat pesanan.',
               textAlign: TextAlign.center,
 
-              style: TextStyle(color: textSecondary, fontSize: 13, height: 1.5),
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
 
             const SizedBox(height: 20),
@@ -396,11 +412,15 @@ class _OrderPageState extends State<OrderPage> {
   // ============================================================
 
   Widget _buildCheckoutBottom() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
 
-        border: const Border(top: BorderSide(color: borderColor, width: 0.7)),
+        border: Border(
+          top: BorderSide(color: colorScheme.outlineVariant, width: 0.7),
+        ),
 
         boxShadow: [
           BoxShadow(
@@ -431,10 +451,10 @@ class _OrderPageState extends State<OrderPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                 children: [
-                  const Text(
+                  Text(
                     'Metode Pembayaran',
                     style: TextStyle(
-                      color: textPrimary,
+                      color: colorScheme.onSurface,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                     ),
@@ -447,7 +467,9 @@ class _OrderPageState extends State<OrderPage> {
                       return Text(
                         value == 1 ? 'Tunai' : 'Pilih metode',
                         style: TextStyle(
-                          color: value == 1 ? primary : textSecondary,
+                          color: value == 1
+                              ? primary
+                              : colorScheme.onSurfaceVariant,
 
                           fontSize: 11,
 
@@ -484,7 +506,7 @@ class _OrderPageState extends State<OrderPage> {
                 ),
 
                 decoration: BoxDecoration(
-                  color: background,
+                  color: colorScheme.surface,
 
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -493,10 +515,10 @@ class _OrderPageState extends State<OrderPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                   children: [
-                    const Text(
+                    Text(
                       'Total Pembayaran',
                       style: TextStyle(
-                        color: textSecondary,
+                        color: colorScheme.onSurfaceVariant,
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -570,7 +592,9 @@ class _OrderPageState extends State<OrderPage> {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
 
         decoration: BoxDecoration(
-          color: isSelected ? primaryLight : Colors.white,
+          color: isSelected
+              ? Theme.of(context).colorScheme.primaryContainer
+              : Theme.of(context).colorScheme.surfaceContainerHighest,
 
           borderRadius: BorderRadius.circular(13),
 
@@ -589,7 +613,9 @@ class _OrderPageState extends State<OrderPage> {
               height: 38,
 
               decoration: BoxDecoration(
-                color: isSelected ? primary : background,
+                color: isSelected
+                    ? primary
+                    : Theme.of(context).colorScheme.surface,
 
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -597,7 +623,9 @@ class _OrderPageState extends State<OrderPage> {
               child: Icon(
                 Icons.payments_outlined,
 
-                color: isSelected ? Colors.white : textSecondary,
+                color: isSelected
+                    ? Colors.white
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
 
                 size: 21,
               ),
@@ -606,7 +634,7 @@ class _OrderPageState extends State<OrderPage> {
             const SizedBox(width: 11),
 
             // TEXT
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -614,7 +642,9 @@ class _OrderPageState extends State<OrderPage> {
                   Text(
                     'Tunai',
                     style: TextStyle(
-                      color: textPrimary,
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.onPrimaryContainer
+                          : Theme.of(context).colorScheme.onSurface,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                     ),
@@ -624,7 +654,10 @@ class _OrderPageState extends State<OrderPage> {
 
                   Text(
                     'Pembayaran secara tunai',
-                    style: TextStyle(color: textSecondary, fontSize: 10),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontSize: 10,
+                    ),
                   ),
                 ],
               ),
@@ -679,12 +712,14 @@ class _OrderPageState extends State<OrderPage> {
   // ============================================================
 
   void _showOpenBillDialog() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     showDialog(
       context: context,
 
       builder: (dialogContext) {
         return Dialog(
-          backgroundColor: Colors.white,
+          backgroundColor: colorScheme.surfaceContainerHighest,
 
           insetPadding: const EdgeInsets.symmetric(horizontal: 24),
 
@@ -712,7 +747,7 @@ class _OrderPageState extends State<OrderPage> {
                       height: 42,
 
                       decoration: BoxDecoration(
-                        color: primaryLight,
+                        color: colorScheme.primaryContainer,
 
                         borderRadius: BorderRadius.circular(11),
                       ),
@@ -726,7 +761,7 @@ class _OrderPageState extends State<OrderPage> {
 
                     const SizedBox(width: 11),
 
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -734,7 +769,7 @@ class _OrderPageState extends State<OrderPage> {
                           Text(
                             'Simpan Draft Order',
                             style: TextStyle(
-                              color: textPrimary,
+                              color: colorScheme.onSurface,
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                             ),
@@ -745,7 +780,7 @@ class _OrderPageState extends State<OrderPage> {
                           Text(
                             'Simpan pesanan untuk diproses nanti',
                             style: TextStyle(
-                              color: textSecondary,
+                              color: colorScheme.onSurfaceVariant,
                               fontSize: 11,
                             ),
                           ),
@@ -880,6 +915,8 @@ class _OrderPageState extends State<OrderPage> {
 
     TextCapitalization textCapitalization = TextCapitalization.none,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -887,8 +924,8 @@ class _OrderPageState extends State<OrderPage> {
         Text(
           label,
 
-          style: const TextStyle(
-            color: textPrimary,
+          style: TextStyle(
+            color: colorScheme.onSurface,
             fontSize: 12,
             fontWeight: FontWeight.w600,
           ),
@@ -903,18 +940,21 @@ class _OrderPageState extends State<OrderPage> {
 
           textCapitalization: textCapitalization,
 
-          style: const TextStyle(color: textPrimary, fontSize: 13),
+          style: TextStyle(color: colorScheme.onSurface, fontSize: 13),
 
           decoration: InputDecoration(
             hintText: hint,
 
-            hintStyle: const TextStyle(color: textSecondary, fontSize: 12),
+            hintStyle: TextStyle(
+              color: colorScheme.onSurfaceVariant,
+              fontSize: 12,
+            ),
 
             prefixIcon: Icon(icon, color: textSecondary, size: 19),
 
             filled: true,
 
-            fillColor: background,
+            fillColor: colorScheme.surface,
 
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 12,

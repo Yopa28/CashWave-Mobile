@@ -66,13 +66,15 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Container(
         constraints: const BoxConstraints(maxWidth: 420),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(24),
         ),
         child: SingleChildScrollView(
@@ -99,6 +101,8 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
   }
 
   Widget _buildHeader() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       children: [
         Container(
@@ -111,7 +115,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
           child: const Icon(Icons.payments_outlined, color: primary, size: 23),
         ),
         const SizedBox(width: 12),
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -120,13 +124,16 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w800,
-                  color: textPrimary,
+                  color: colorScheme.onSurface,
                 ),
               ),
               SizedBox(height: 3),
               Text(
                 'Masukkan nominal pembayaran',
-                style: TextStyle(fontSize: 12, color: textSecondary),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
           ),
@@ -140,13 +147,13 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: background,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.close_rounded,
                 size: 20,
-                color: textSecondary,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -156,11 +163,13 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
   }
 
   Widget _buildTotalCard() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: primaryLight,
+        color: colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: primary.withOpacity(0.08)),
       ),
@@ -170,7 +179,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(11),
             ),
             child: const Icon(
@@ -180,7 +189,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
             ),
           ),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -188,7 +197,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                   'Total yang harus dibayar',
                   style: TextStyle(
                     fontSize: 11,
-                    color: textSecondary,
+                    color: colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -197,7 +206,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                   'Total Pesanan',
                   style: TextStyle(
                     fontSize: 13,
-                    color: textPrimary,
+                    color: colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -218,21 +227,23 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
   }
 
   Widget _buildPaymentInput() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Nominal Pembayaran',
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w700,
-            color: textPrimary,
+            color: colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 9),
         Container(
           decoration: BoxDecoration(
-            color: background,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(15),
             border: Border.all(
               color: _isEnough ? primary.withOpacity(0.35) : borderColor,
@@ -242,10 +253,10 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
             controller: priceController,
             keyboardType: TextInputType.number,
             enabled: !_isProcessing,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
-              color: textPrimary,
+              color: colorScheme.onSurface,
             ),
             decoration: const InputDecoration(
               prefixIcon: Padding(
@@ -355,7 +366,9 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
           decoration: BoxDecoration(
-            color: amount == widget.price ? primaryLight : background,
+            color: amount == widget.price
+                ? Theme.of(context).colorScheme.primaryContainer
+                : Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(11),
             border: Border.all(
               color: amount == widget.price
@@ -384,7 +397,9 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: enough ? primaryLight : const Color(0xfffff1f0),
+        color: enough
+            ? Theme.of(context).colorScheme.primaryContainer
+            : Theme.of(context).colorScheme.errorContainer,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: enough ? primary.withOpacity(0.10) : const Color(0xfff2d2d0),
@@ -406,7 +421,9 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: enough ? textPrimary : const Color(0xffD9534F),
+                color: enough
+                    ? Theme.of(context).colorScheme.onPrimaryContainer
+                    : Theme.of(context).colorScheme.onErrorContainer,
               ),
             ),
           ),

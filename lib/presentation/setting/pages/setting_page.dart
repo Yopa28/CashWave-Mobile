@@ -9,6 +9,7 @@ import 'package:cashwave_mobile/presentation/setting/bloc/report/close_cashier/c
 import 'package:cashwave_mobile/presentation/setting/pages/manage_printer_page.dart';
 import 'package:cashwave_mobile/presentation/setting/pages/report/report_page.dart';
 import 'package:cashwave_mobile/presentation/setting/pages/sync_data_page.dart';
+import 'package:cashwave_mobile/core/theme/theme_controller.dart';
 
 import '../../home/bloc/logout/logout_bloc.dart';
 import '../bloc/sync_order/sync_order_bloc.dart';
@@ -37,31 +38,32 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final pageBackground = colorScheme.surface;
+    final primaryText = colorScheme.onSurface;
+    final secondaryText = colorScheme.onSurfaceVariant;
+
     return Scaffold(
-      backgroundColor: background,
+      backgroundColor: pageBackground,
 
       // ========================================================
       // APP BAR
       // ========================================================
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: pageBackground,
+        surfaceTintColor: pageBackground,
         elevation: 0,
         centerTitle: false,
         titleSpacing: 20,
 
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: textPrimary,
-            size: 19,
-          ),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 19),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
 
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -69,7 +71,7 @@ class _SettingPageState extends State<SettingPage> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
-                color: textPrimary,
+                color: primaryText,
               ),
             ),
             SizedBox(height: 2),
@@ -78,7 +80,7 @@ class _SettingPageState extends State<SettingPage> {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
-                color: textSecondary,
+                color: secondaryText,
               ),
             ),
           ],
@@ -162,6 +164,10 @@ class _SettingPageState extends State<SettingPage> {
 
             const SizedBox(height: 10),
 
+            _buildThemeCard(),
+
+            const SizedBox(height: 10),
+
             // ==================================================
             // CLOSE KASIR
             // ==================================================
@@ -206,12 +212,12 @@ class _SettingPageState extends State<SettingPage> {
             // ==================================================
             // ACCOUNT
             // ==================================================
-            const Text(
+            Text(
               'Akun',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
-                color: textPrimary,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
 
@@ -266,8 +272,12 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: primary,
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: borderColor),
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.outlineVariant,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
                       ),
@@ -282,6 +292,55 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  Widget _buildThemeCard() {
+    final themeController = ThemeScope.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colorScheme.outlineVariant),
+      ),
+      child: Material(
+        type: MaterialType.transparency,
+        child: SwitchListTile.adaptive(
+          contentPadding: EdgeInsets.zero,
+          secondary: Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              color: primaryLight,
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: Icon(
+              themeController.isDarkMode
+                  ? Icons.dark_mode_outlined
+                  : Icons.light_mode_outlined,
+              color: primary,
+            ),
+          ),
+          title: Text(
+            'Mode gelap',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          subtitle: Text(
+            'Sesuaikan tampilan aplikasi',
+            style: TextStyle(fontSize: 10, color: colorScheme.onSurfaceVariant),
+          ),
+          value: themeController.isDarkMode,
+          onChanged: themeController.setDarkMode,
+        ),
+      ),
+    );
+  }
+
   // ============================================================
   // SECTION HEADER
   // ============================================================
@@ -291,6 +350,8 @@ class _SettingPageState extends State<SettingPage> {
     required String title,
     required String subtitle,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       children: [
         Container(
@@ -311,16 +372,19 @@ class _SettingPageState extends State<SettingPage> {
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: textPrimary,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 3),
               Text(
                 subtitle,
-                style: const TextStyle(fontSize: 11, color: textSecondary),
+                style: TextStyle(
+                  fontSize: 11,
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
           ),
@@ -340,11 +404,12 @@ class _SettingPageState extends State<SettingPage> {
     required VoidCallback onTap,
     bool isDanger = false,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     final Color iconColor = isDanger ? const Color(0xffD9534F) : primary;
 
     final Color iconBackground = isDanger
-        ? const Color(0xfffff1f0)
-        : primaryLight;
+        ? colorScheme.errorContainer
+        : colorScheme.primaryContainer;
 
     return Material(
       color: Colors.transparent,
@@ -355,9 +420,9 @@ class _SettingPageState extends State<SettingPage> {
           width: double.infinity,
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: borderColor),
+            border: Border.all(color: colorScheme.outlineVariant),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.025),
@@ -388,10 +453,10 @@ class _SettingPageState extends State<SettingPage> {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: textPrimary,
+                        color: colorScheme.onSurface,
                       ),
                     ),
 
@@ -399,9 +464,9 @@ class _SettingPageState extends State<SettingPage> {
 
                     Text(
                       subtitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
-                        color: textSecondary,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -434,6 +499,8 @@ class _SettingPageState extends State<SettingPage> {
   // ============================================================
 
   void _showCloseCashierDialog(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -443,7 +510,7 @@ class _SettingPageState extends State<SettingPage> {
           child: Container(
             padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(22),
             ),
             child: Column(
@@ -454,12 +521,12 @@ class _SettingPageState extends State<SettingPage> {
                   width: 58,
                   height: 58,
                   decoration: BoxDecoration(
-                    color: const Color(0xfffff1f0),
+                    color: colorScheme.errorContainer,
                     borderRadius: BorderRadius.circular(17),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.lock_outline_rounded,
-                    color: Color(0xffD9534F),
+                    color: colorScheme.onErrorContainer,
                     size: 29,
                   ),
                 ),
@@ -467,26 +534,26 @@ class _SettingPageState extends State<SettingPage> {
                 const SizedBox(height: 16),
 
                 // TITLE
-                const Text(
+                Text(
                   'Tutup Kasir?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
-                    color: textPrimary,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
                 const SizedBox(height: 7),
 
                 // DESCRIPTION
-                const Text(
+                Text(
                   'Pastikan semua transaksi sudah selesai dan data sudah tersinkronisasi sebelum menutup kasir.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 12,
                     height: 1.5,
-                    color: textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
 
@@ -503,8 +570,8 @@ class _SettingPageState extends State<SettingPage> {
                             Navigator.pop(dialogContext);
                           },
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: textSecondary,
-                            side: const BorderSide(color: borderColor),
+                            foregroundColor: colorScheme.onSurfaceVariant,
+                            side: BorderSide(color: colorScheme.outlineVariant),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -566,6 +633,8 @@ class _SettingPageState extends State<SettingPage> {
   // ============================================================
 
   void _showLogoutDialog(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -575,7 +644,7 @@ class _SettingPageState extends State<SettingPage> {
           child: Container(
             padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(22),
             ),
             child: Column(
@@ -599,26 +668,26 @@ class _SettingPageState extends State<SettingPage> {
                 const SizedBox(height: 16),
 
                 // TITLE
-                const Text(
+                Text(
                   'Logout dari CashWave?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
-                    color: textPrimary,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
                 const SizedBox(height: 7),
 
                 // DESCRIPTION
-                const Text(
+                Text(
                   'Anda akan keluar dari akun kasir saat ini.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 12,
                     height: 1.5,
-                    color: textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
 
@@ -635,8 +704,8 @@ class _SettingPageState extends State<SettingPage> {
                             Navigator.pop(dialogContext);
                           },
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: textSecondary,
-                            side: const BorderSide(color: borderColor),
+                            foregroundColor: colorScheme.onSurfaceVariant,
+                            side: BorderSide(color: colorScheme.outlineVariant),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

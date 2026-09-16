@@ -33,6 +33,8 @@ class ProductCard extends StatelessWidget {
 
     return BlocBuilder<CheckoutBloc, CheckoutState>(
       builder: (context, state) {
+        final colorScheme = Theme.of(context).colorScheme;
+
         // ======================================================
         // GET QUANTITY
         // ======================================================
@@ -93,11 +95,11 @@ class ProductCard extends StatelessWidget {
 
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surfaceContainerHighest,
 
               borderRadius: BorderRadius.circular(16),
 
-              border: Border.all(color: borderColor, width: 0.8),
+              border: Border.all(color: colorScheme.outlineVariant, width: 0.8),
 
               boxShadow: [
                 BoxShadow(
@@ -128,7 +130,7 @@ class ProductCard extends StatelessWidget {
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: imageBackground,
+                            color: colorScheme.surface,
                             borderRadius: BorderRadius.circular(13),
                           ),
                           child: ClipRRect(
@@ -257,8 +259,8 @@ class ProductCard extends StatelessWidget {
 
                     overflow: TextOverflow.ellipsis,
 
-                    style: const TextStyle(
-                      color: textPrimary,
+                    style: TextStyle(
+                      color: colorScheme.onSurface,
 
                       fontSize: 14,
 
@@ -280,7 +282,7 @@ class ProductCard extends StatelessWidget {
                     ),
 
                     decoration: BoxDecoration(
-                      color: primaryLight,
+                      color: colorScheme.primaryContainer,
 
                       borderRadius: BorderRadius.circular(6),
                     ),
@@ -292,8 +294,8 @@ class ProductCard extends StatelessWidget {
 
                       overflow: TextOverflow.ellipsis,
 
-                      style: const TextStyle(
-                        color: primary,
+                      style: TextStyle(
+                        color: colorScheme.onPrimaryContainer,
 
                         fontSize: 9,
 

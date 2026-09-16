@@ -30,15 +30,17 @@ class _SyncDataPageState extends State<SyncDataPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: background,
+      backgroundColor: colorScheme.surface,
 
       // ========================================================
       // APP BAR
       // ========================================================
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: colorScheme.surface,
+        surfaceTintColor: colorScheme.surface,
         elevation: 0,
         centerTitle: false,
         titleSpacing: 20,
@@ -262,10 +264,12 @@ class _SyncDataPageState extends State<SyncDataPage> {
   // ============================================================
 
   Widget _buildInfoCard() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(17),
       decoration: BoxDecoration(
-        color: primaryLight,
+        color: colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(17),
         border: Border.all(color: primary.withOpacity(0.08)),
       ),
@@ -275,7 +279,7 @@ class _SyncDataPageState extends State<SyncDataPage> {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(13),
             ),
             child: const Icon(Icons.sync_rounded, color: primary, size: 23),
@@ -283,7 +287,7 @@ class _SyncDataPageState extends State<SyncDataPage> {
 
           const SizedBox(width: 12),
 
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -292,7 +296,7 @@ class _SyncDataPageState extends State<SyncDataPage> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    color: textPrimary,
+                    color: colorScheme.onPrimaryContainer,
                   ),
                 ),
                 SizedBox(height: 4),
@@ -301,7 +305,7 @@ class _SyncDataPageState extends State<SyncDataPage> {
                   style: TextStyle(
                     fontSize: 10,
                     height: 1.45,
-                    color: textSecondary,
+                    color: colorScheme.onPrimaryContainer,
                   ),
                 ),
               ],
@@ -323,12 +327,14 @@ class _SyncDataPageState extends State<SyncDataPage> {
     required bool isLoading,
     required VoidCallback? onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.025),
@@ -442,28 +448,34 @@ class _SyncDataPageState extends State<SyncDataPage> {
   // ============================================================
 
   Widget _buildNoteCard() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
+          Icon(
             Icons.info_outline_rounded,
             size: 18,
-            color: textSecondary,
+            color: colorScheme.onSurfaceVariant,
           ),
 
           const SizedBox(width: 10),
 
-          const Expanded(
+          Expanded(
             child: Text(
               'Sync Product dan Kategori akan memperbarui data lokal dengan data terbaru dari server. Sync Orders digunakan untuk mengirim transaksi yang tersimpan di perangkat.',
-              style: TextStyle(fontSize: 10, height: 1.5, color: textSecondary),
+              style: TextStyle(
+                fontSize: 10,
+                height: 1.5,
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
         ],

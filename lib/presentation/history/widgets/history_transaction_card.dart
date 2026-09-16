@@ -26,13 +26,14 @@ class HistoryTransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isQris = data.paymentMethod == 'QRIS';
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       margin: padding,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.035),
@@ -43,7 +44,7 @@ class HistoryTransactionCard extends StatelessWidget {
       ),
       child: Theme(
         data: Theme.of(context).copyWith(
-          dividerColor: Colors.transparent,
+          dividerColor: colorScheme.outlineVariant,
           splashColor: primaryLight,
           highlightColor: primaryLight,
         ),
@@ -92,10 +93,10 @@ class HistoryTransactionCard extends StatelessWidget {
                           child: Text(
                             data.transactionTime.toFormattedTime,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
-                              color: textPrimary,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -128,9 +129,9 @@ class HistoryTransactionCard extends StatelessWidget {
 
                     Text(
                       '${data.totalQuantity} item${data.totalQuantity > 1 ? 's' : ''}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
-                        color: textSecondary,
+                        color: colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

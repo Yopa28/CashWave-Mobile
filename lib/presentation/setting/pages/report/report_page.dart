@@ -110,14 +110,9 @@ class _ReportPageState extends State<ReportPage> {
       lastDate: DateTime(2100),
       builder: (context, child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: primary,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: textPrimary,
-            ),
-          ),
+          data: Theme.of(
+            context,
+          ).copyWith(colorScheme: Theme.of(context).colorScheme),
           child: child!,
         );
       },
@@ -142,14 +137,9 @@ class _ReportPageState extends State<ReportPage> {
       lastDate: DateTime(2100),
       builder: (context, child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: primary,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: textPrimary,
-            ),
-          ),
+          data: Theme.of(
+            context,
+          ).copyWith(colorScheme: Theme.of(context).colorScheme),
           child: child!,
         );
       },
@@ -287,6 +277,8 @@ class _ReportPageState extends State<ReportPage> {
     required DateTime date,
     required VoidCallback onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Expanded(
       child: Material(
         color: Colors.transparent,
@@ -296,7 +288,7 @@ class _ReportPageState extends State<ReportPage> {
           child: Container(
             padding: const EdgeInsets.all(13),
             decoration: BoxDecoration(
-              color: background,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: borderColor),
             ),
@@ -324,8 +316,8 @@ class _ReportPageState extends State<ReportPage> {
                     children: [
                       Text(
                         label,
-                        style: const TextStyle(
-                          color: textSecondary,
+                        style: TextStyle(
+                          color: colorScheme.onSurfaceVariant,
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
                         ),
@@ -336,8 +328,8 @@ class _ReportPageState extends State<ReportPage> {
                       Text(
                         DateFormat('dd MMM yyyy').format(date),
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: textPrimary,
+                        style: TextStyle(
+                          color: colorScheme.onSurface,
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
                         ),
@@ -348,9 +340,9 @@ class _ReportPageState extends State<ReportPage> {
 
                 const SizedBox(width: 4),
 
-                const Icon(
+                Icon(
                   Icons.keyboard_arrow_down_rounded,
-                  color: textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   size: 18,
                 ),
               ],
@@ -366,24 +358,26 @@ class _ReportPageState extends State<ReportPage> {
   // ============================================================
 
   Widget _buildFilterSection() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: card,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
               Icon(Icons.filter_alt_outlined, color: primary, size: 20),
               SizedBox(width: 8),
               Text(
                 'Periode Laporan',
                 style: TextStyle(
-                  color: textPrimary,
+                  color: colorScheme.onSurface,
                   fontSize: 15,
                   fontWeight: FontWeight.w800,
                 ),
@@ -393,9 +387,9 @@ class _ReportPageState extends State<ReportPage> {
 
           const SizedBox(height: 5),
 
-          const Text(
+          Text(
             'Pilih periode transaksi yang ingin ditampilkan.',
-            style: TextStyle(color: textSecondary, fontSize: 11),
+            style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 11),
           ),
 
           const SizedBox(height: 14),
@@ -965,6 +959,7 @@ class _ReportPageState extends State<ReportPage> {
 
   Widget tableProductSales(ProductSalesResponseModel data) {
     const double itemHeight = 55.0;
+    final colorScheme = Theme.of(context).colorScheme;
 
     final double tableHeight = itemHeight * data.data.length;
 
@@ -1053,9 +1048,9 @@ class _ReportPageState extends State<ReportPage> {
             thickness: 1,
           ),
 
-          leftHandSideColBackgroundColor: Colors.white,
+          leftHandSideColBackgroundColor: colorScheme.surfaceContainerHighest,
 
-          rightHandSideColBackgroundColor: Colors.white,
+          rightHandSideColBackgroundColor: colorScheme.surfaceContainerHighest,
 
           itemExtent: 55,
         ),
@@ -1073,6 +1068,8 @@ class _ReportPageState extends State<ReportPage> {
     bool isTotal = false,
     bool alignLeft = false,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: width,
       height: 52,
@@ -1084,7 +1081,7 @@ class _ReportPageState extends State<ReportPage> {
         overflow: TextOverflow.ellipsis,
         textAlign: alignLeft ? TextAlign.left : TextAlign.center,
         style: TextStyle(
-          color: isTotal ? primary : textPrimary,
+          color: isTotal ? primary : colorScheme.onSurface,
           fontSize: 10,
           fontWeight: isTotal ? FontWeight.w800 : FontWeight.w500,
         ),
@@ -1097,10 +1094,12 @@ class _ReportPageState extends State<ReportPage> {
   // ============================================================
 
   Widget _buildExportButton() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerHighest,
         border: const Border(top: BorderSide(color: borderColor)),
         boxShadow: [
           BoxShadow(

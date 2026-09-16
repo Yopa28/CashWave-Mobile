@@ -53,14 +53,16 @@ class _ManageProductPageState extends State<ManageProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: background,
+      backgroundColor: colorScheme.surface,
 
       // ============================================================
       // APP BAR
       // ============================================================
       appBar: AppBar(
-        backgroundColor: cardColor,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
 
@@ -148,10 +150,10 @@ class _ManageProductPageState extends State<ManageProductPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'Daftar Produk',
                                 style: TextStyle(
-                                  color: textPrimary,
+                                  color: colorScheme.onSurface,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w800,
                                 ),
@@ -159,8 +161,8 @@ class _ManageProductPageState extends State<ManageProductPage> {
                               const SizedBox(height: 5),
                               Text(
                                 '${filteredProducts.length} produk tersedia',
-                                style: const TextStyle(
-                                  color: textSecondary,
+                                style: TextStyle(
+                                  color: colorScheme.onSurfaceVariant,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -209,9 +211,9 @@ class _ManageProductPageState extends State<ManageProductPage> {
                     // ==================================================
                     Container(
                       decoration: BoxDecoration(
-                        color: cardColor,
+                        color: colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: borderColor),
+                        border: Border.all(color: colorScheme.outlineVariant),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.025),

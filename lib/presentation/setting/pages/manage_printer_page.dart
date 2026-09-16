@@ -297,14 +297,16 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: background,
+      backgroundColor: colorScheme.surface,
 
       // ============================================================
       // APP BAR
       // ============================================================
       appBar: AppBar(
-        backgroundColor: cardColor,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
 
@@ -384,11 +386,14 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
 
   Widget _buildConnectionStatus() {
     final bool hasPrinter = macName.isNotEmpty && connected;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: hasPrinter ? primaryLight : cardColor,
+        color: hasPrinter
+            ? colorScheme.primaryContainer
+            : colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: hasPrinter ? primary.withOpacity(0.20) : borderColor,
@@ -400,7 +405,7 @@ class _ManagePrinterPageState extends State<ManagePrinterPage> {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: hasPrinter ? primary : background,
+              color: hasPrinter ? primary : colorScheme.surface,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(

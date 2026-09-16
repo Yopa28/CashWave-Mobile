@@ -64,6 +64,8 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -74,8 +76,8 @@ class CustomTextField extends StatelessWidget {
         if (showLabel) ...[
           Text(
             label,
-            style: const TextStyle(
-              color: textPrimary,
+            style: TextStyle(
+              color: colorScheme.onSurface,
               fontSize: 13,
               fontWeight: FontWeight.w700,
             ),
@@ -104,8 +106,8 @@ class CustomTextField extends StatelessWidget {
 
           validator: validator,
 
-          style: const TextStyle(
-            color: textPrimary,
+          style: TextStyle(
+            color: colorScheme.onSurface,
             fontSize: 13,
             fontWeight: FontWeight.w500,
           ),
@@ -130,8 +132,8 @@ class CustomTextField extends StatelessWidget {
             // ==================================================
             hintText: hintText ?? label,
 
-            hintStyle: const TextStyle(
-              color: textSecondary,
+            hintStyle: TextStyle(
+              color: colorScheme.onSurfaceVariant,
               fontSize: 13,
               fontWeight: FontWeight.w400,
             ),
@@ -141,7 +143,9 @@ class CustomTextField extends StatelessWidget {
             // ==================================================
             filled: true,
 
-            fillColor: enabled ? background : const Color(0xffEEF1EF),
+            fillColor: enabled
+                ? colorScheme.surface
+                : colorScheme.surfaceContainerHighest,
 
             // ==================================================
             // CONTENT PADDING

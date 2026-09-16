@@ -40,6 +40,8 @@ class SearchInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return TextFormField(
       controller: controller,
 
@@ -51,8 +53,8 @@ class SearchInput extends StatelessWidget {
 
       cursorColor: primary,
 
-      style: const TextStyle(
-        color: textPrimary,
+      style: TextStyle(
+        color: colorScheme.onSurface,
         fontSize: 13,
         fontWeight: FontWeight.w500,
       ),
@@ -64,8 +66,8 @@ class SearchInput extends StatelessWidget {
 
         hintText: 'Cari produk...',
 
-        hintStyle: const TextStyle(
-          color: textSecondary,
+        hintStyle: TextStyle(
+          color: colorScheme.onSurfaceVariant,
           fontSize: 13,
           fontWeight: FontWeight.w400,
         ),
@@ -88,7 +90,7 @@ class SearchInput extends StatelessWidget {
             },
 
             style: IconButton.styleFrom(
-              backgroundColor: primaryLight,
+              backgroundColor: colorScheme.primaryContainer,
 
               foregroundColor: primary,
 
@@ -151,7 +153,7 @@ class SearchInput extends StatelessWidget {
         // ======================================================
         filled: true,
 
-        fillColor: Colors.white,
+        fillColor: colorScheme.surfaceContainerHighest,
 
         // ======================================================
         // ERROR

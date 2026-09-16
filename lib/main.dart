@@ -28,6 +28,7 @@ import 'package:cashwave_mobile/presentation/home/bloc/logout/logout_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'core/constants/colors.dart';
+import 'core/theme/theme_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,182 +59,220 @@ class MyBlocObserver extends BlocObserver {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final ThemeController _themeController = ThemeController();
+
+  @override
+  void initState() {
+    super.initState();
+    _themeController.load();
+  }
+
+  @override
+  void dispose() {
+    _themeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        // ============================================================
-        // AUTH
-        // ============================================================
+    return ThemeScope(
+      notifier: _themeController,
+      child: MultiBlocProvider(
+        providers: [
+          // ============================================================
+          // AUTH
+          // ============================================================
 
-        BlocProvider(create: (context) => LoginBloc(AuthRemoteDatasource())),
+          BlocProvider(create: (context) => LoginBloc(AuthRemoteDatasource())),
 
-        BlocProvider(create: (context) => LogoutBloc(AuthRemoteDatasource())),
+          BlocProvider(create: (context) => LogoutBloc(AuthRemoteDatasource())),
 
-        // ============================================================
-        // PRODUCT
-        // ============================================================
-        BlocProvider(
-          create: (context) =>
-              ProductBloc(ProductRemoteDatasource())
-                ..add(const ProductEvent.fetchLocal()),
-        ),
-
-        // ============================================================
-        // DASHBOARD
-        // ============================================================
-        BlocProvider(
-          create: (context) =>
-              DashboardBloc(DashboardRemoteDatasource())
-                ..add(const DashboardEvent.fetch()),
-        ),
-
-        // ============================================================
-        // CHECKOUT
-        // ============================================================
-        BlocProvider(create: (context) => CheckoutBloc()),
-
-        // ============================================================
-        // ORDER
-        // ============================================================
-        BlocProvider(create: (context) => OrderBloc()),
-
-        // ============================================================
-        // HISTORY
-        // ============================================================
-        BlocProvider(create: (context) => HistoryBloc()),
-
-        // ============================================================
-        // SYNC ORDER
-        // ============================================================
-        BlocProvider(
-          create: (context) => SyncOrderBloc(OrderRemoteDatasource()),
-        ),
-
-        // ============================================================
-        // CATEGORY
-        // ============================================================
-        BlocProvider(
-          create: (context) => CategoryBloc(ProductRemoteDatasource()),
-        ),
-
-        // ============================================================
-        // DRAFT ORDER
-        // ============================================================
-        BlocProvider(
-          create: (context) => DraftOrderBloc(ProductLocalDatasource.instance),
-        ),
-
-        // ============================================================
-        // REPORT - SUMMARY
-        // ============================================================
-        BlocProvider(
-          create: (context) => SummaryBloc(ReportRemoteDatasource()),
-        ),
-
-        // ============================================================
-        // REPORT - PRODUCT SALES
-        // ============================================================
-        BlocProvider(
-          create: (context) => ProductSalesBloc(ReportRemoteDatasource()),
-        ),
-
-        // ============================================================
-        // REPORT - CLOSE CASHIER
-        // ============================================================
-        BlocProvider(
-          create: (context) => CloseCashierBloc(ReportRemoteDatasource()),
-        ),
-      ],
-
-      // ==============================================================
-      // APP
-      // ==============================================================
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-
-        title: 'CashWave App',
-
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
-
-          useMaterial3: true,
-
-          textTheme: GoogleFonts.quicksandTextTheme(
-            Theme.of(context).textTheme,
+          // ============================================================
+          // PRODUCT
+          // ============================================================
+          BlocProvider(
+            create: (context) =>
+                ProductBloc(ProductRemoteDatasource())
+                  ..add(const ProductEvent.fetchLocal()),
           ),
 
-          appBarTheme: AppBarTheme(
-            color: AppColors.primary,
+          // ============================================================
+          // DASHBOARD
+          // ============================================================
+          BlocProvider(
+            create: (context) =>
+                DashboardBloc(DashboardRemoteDatasource())
+                  ..add(const DashboardEvent.fetch()),
+          ),
 
-            elevation: 0,
+          // ============================================================
+          // CHECKOUT
+          // ============================================================
+          BlocProvider(create: (context) => CheckoutBloc()),
 
-            titleTextStyle: GoogleFonts.quicksand(
-              color: AppColors.white,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
+          // ============================================================
+          // ORDER
+          // ============================================================
+          BlocProvider(create: (context) => OrderBloc()),
+
+          // ============================================================
+          // HISTORY
+          // ============================================================
+          BlocProvider(create: (context) => HistoryBloc()),
+
+          // ============================================================
+          // SYNC ORDER
+          // ============================================================
+          BlocProvider(
+            create: (context) => SyncOrderBloc(OrderRemoteDatasource()),
+          ),
+
+          // ============================================================
+          // CATEGORY
+          // ============================================================
+          BlocProvider(
+            create: (context) => CategoryBloc(ProductRemoteDatasource()),
+          ),
+
+          // ============================================================
+          // DRAFT ORDER
+          // ============================================================
+          BlocProvider(
+            create: (context) =>
+                DraftOrderBloc(ProductLocalDatasource.instance),
+          ),
+
+          // ============================================================
+          // REPORT - SUMMARY
+          // ============================================================
+          BlocProvider(
+            create: (context) => SummaryBloc(ReportRemoteDatasource()),
+          ),
+
+          // ============================================================
+          // REPORT - PRODUCT SALES
+          // ============================================================
+          BlocProvider(
+            create: (context) => ProductSalesBloc(ReportRemoteDatasource()),
+          ),
+
+          // ============================================================
+          // REPORT - CLOSE CASHIER
+          // ============================================================
+          BlocProvider(
+            create: (context) => CloseCashierBloc(ReportRemoteDatasource()),
+          ),
+        ],
+
+        // ==============================================================
+        // APP
+        // ==============================================================
+        child: Builder(
+          builder: (context) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+
+            title: 'CashWave App',
+
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
+
+              useMaterial3: true,
+
+              textTheme: GoogleFonts.quicksandTextTheme(),
+
+              appBarTheme: AppBarTheme(
+                backgroundColor: AppColors.primary,
+
+                elevation: 0,
+
+                titleTextStyle: GoogleFonts.quicksand(
+                  color: AppColors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
+
+                iconTheme: const IconThemeData(color: AppColors.primary),
+              ),
             ),
 
-            iconTheme: const IconThemeData(color: AppColors.primary),
-          ),
-        ),
-
-        // ============================================================
-        // GLOBAL ERROR HANDLING
-        // ============================================================
-        builder: (context, child) {
-          ErrorWidget.builder = (FlutterErrorDetails details) {
-            return Scaffold(
-              body: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Text(
-                    'Terjadi error:\n\n'
-                    '${details.exceptionAsString()}',
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+            darkTheme: ThemeData(
+              brightness: Brightness.dark,
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: AppColors.primary,
+                brightness: Brightness.dark,
               ),
-            );
-          };
+              useMaterial3: true,
+              textTheme: GoogleFonts.quicksandTextTheme(
+                ThemeData.dark().textTheme,
+              ),
+              appBarTheme: const AppBarTheme(elevation: 0),
+            ),
 
-          return child!;
-        },
+            themeMode: ThemeScope.of(context).themeMode,
 
-        // ============================================================
-        // HOME / LOGIN
-        // ============================================================
-        home: FutureBuilder<bool>(
-          future: AuthLocalDatasource().isAuth(),
+            // ============================================================
+            // GLOBAL ERROR HANDLING
+            // ============================================================
+            builder: (context, child) {
+              ErrorWidget.builder = (FlutterErrorDetails details) {
+                return Scaffold(
+                  body: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Text(
+                        'Terjadi error:\n\n'
+                        '${details.exceptionAsString()}',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                );
+              };
 
-          builder: (context, snapshot) {
-            // --------------------------------------------------------
-            // LOADING
-            // --------------------------------------------------------
+              return child!;
+            },
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              );
-            }
+            // ============================================================
+            // HOME / LOGIN
+            // ============================================================
+            home: FutureBuilder<bool>(
+              future: AuthLocalDatasource().isAuth(),
 
-            // --------------------------------------------------------
-            // AUTHENTICATED
-            // --------------------------------------------------------
+              builder: (context, snapshot) {
+                // --------------------------------------------------------
+                // LOADING
+                // --------------------------------------------------------
 
-            if (snapshot.hasData && snapshot.data == true) {
-              return const DashboardPage();
-            }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  );
+                }
 
-            // --------------------------------------------------------
-            // NOT AUTHENTICATED
-            // --------------------------------------------------------
+                // --------------------------------------------------------
+                // AUTHENTICATED
+                // --------------------------------------------------------
 
-            return const LoginPage();
-          },
+                if (snapshot.hasData && snapshot.data == true) {
+                  return const DashboardPage();
+                }
+
+                // --------------------------------------------------------
+                // NOT AUTHENTICATED
+                // --------------------------------------------------------
+
+                return const LoginPage();
+              },
+            ),
+          ),
         ),
       ),
     );
