@@ -15,27 +15,74 @@ part 'checkout_bloc.freezed.dart';
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   CheckoutBloc() : super(const _Success([], 0, 0, 'customer')) {
     on<_AddCheckout>((event, emit) {
-      var currentStates = state as _Success;
-      List<OrderItem> newCheckout = [...currentStates.products];
-      emit(const _Loading());
-      if (newCheckout.any((element) => element.product == event.product)) {
-        var index = newCheckout
-            .indexWhere((element) => element.product == event.product);
-        newCheckout[index].quantity++;
+      final currentStates = state as _Success;
+      final newCheckout = [...currentStates.products];
+
+      final index = newCheckout.indexWhere(
+        (element) => element.product == event.product,
+      );
+
+      if (event.product.stock <= 0) {
+        emit(_Error('Stok ${event.product.name} sedang habis.'));
+
+        emit(
+          _Success(
+            newCheckout,
+            currentStates.totalQuantity,
+            currentStates.totalPrice,
+            currentStates.draftName,
+          ),
+        );
+
+        return;
+      }
+
+      if (index != -1) {
+        final currentQuantity = newCheckout[index].quantity;
+
+        if (currentQuantity >= event.product.stock) {
+          emit(
+            _Error(
+              'Stok ${event.product.name} hanya tersedia ${event.product.stock}.',
+            ),
+          );
+
+          emit(
+            _Success(
+              newCheckout,
+              currentStates.totalQuantity,
+              currentStates.totalPrice,
+              currentStates.draftName,
+            ),
+          );
+
+          return;
+        }
+
+        newCheckout[index] = OrderItem(
+          product: event.product,
+          quantity: currentQuantity + 1,
+        );
       } else {
         newCheckout.add(OrderItem(product: event.product, quantity: 1));
       }
 
-      // int totalQuantity = newCheckout.fold(0, (previousValue, element) => previousValue + element.quantity);
       int totalQuantity = 0;
       int totalPrice = 0;
-      for (var element in newCheckout) {
+
+      for (final element in newCheckout) {
         totalQuantity += element.quantity;
         totalPrice += element.quantity * element.product.price;
       }
 
-      emit(_Success(
-          newCheckout, totalQuantity, totalPrice, currentStates.draftName));
+      emit(
+        _Success(
+          newCheckout,
+          totalQuantity,
+          totalPrice,
+          currentStates.draftName,
+        ),
+      );
     });
 
     on<_RemoveCheckout>((event, emit) {
@@ -43,8 +90,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       List<OrderItem> newCheckout = [...currentStates.products];
       emit(const _Loading());
       if (newCheckout.any((element) => element.product == event.product)) {
-        var index = newCheckout
-            .indexWhere((element) => element.product == event.product);
+        var index = newCheckout.indexWhere(
+          (element) => element.product == event.product,
+        );
         if (newCheckout[index].quantity > 1) {
           newCheckout[index].quantity--;
         } else {
@@ -60,8 +108,14 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         totalPrice += element.quantity * element.product.price;
       }
 
-      emit(_Success(
-          newCheckout, totalQuantity, totalPrice, currentStates.draftName));
+      emit(
+        _Success(
+          newCheckout,
+          totalQuantity,
+          totalPrice,
+          currentStates.draftName,
+        ),
+      );
     });
 
     //remove product
@@ -70,8 +124,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       List<OrderItem> newCheckout = [...currentStates.products];
       emit(const _Loading());
       if (newCheckout.any((element) => element.product == event.product)) {
-        var index = newCheckout
-            .indexWhere((element) => element.product == event.product);
+        var index = newCheckout.indexWhere(
+          (element) => element.product == event.product,
+        );
         newCheckout.removeAt(index);
       }
 
@@ -83,8 +138,14 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         totalPrice += element.quantity * element.product.price;
       }
 
-      emit(_Success(
-          newCheckout, totalQuantity, totalPrice, currentStates.draftName));
+      emit(
+        _Success(
+          newCheckout,
+          totalQuantity,
+          totalPrice,
+          currentStates.draftName,
+        ),
+      );
     });
 
     on<_Started>((event, emit) {
@@ -97,17 +158,17 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       emit(const _Loading());
       final draftOrder = DraftOrderModel(
         orders: currentStates.products
-            .map((e) => DraftOrderItem(
-                  product: e.product,
-                  quantity: e.quantity,
-                ))
+            .map(
+              (e) => DraftOrderItem(product: e.product, quantity: e.quantity),
+            )
             .toList(),
         totalQuantity: currentStates.totalQuantity,
         totalPrice: currentStates.totalPrice,
         tableNumber: event.tableNumber,
         draftName: event.draftName,
-        transactionTime:
-            DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+        transactionTime: DateFormat(
+          'yyyy-MM-dd HH:mm:ss',
+        ).format(DateTime.now()),
       );
       ProductLocalDatasource.instance.saveDraftOrder(draftOrder);
       emit(const _SavedDraftOrder());
@@ -117,13 +178,16 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     on<_LoadDraftOrder>((event, emit) async {
       emit(const _Loading());
       final draftOrder = event.data;
-      emit(_Success(
+      emit(
+        _Success(
           draftOrder.orders
               .map((e) => OrderItem(product: e.product, quantity: e.quantity))
               .toList(),
           draftOrder.totalQuantity,
           draftOrder.totalPrice,
-          draftOrder.draftName));
+          draftOrder.draftName,
+        ),
+      );
     });
   }
 }

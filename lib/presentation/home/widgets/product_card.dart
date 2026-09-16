@@ -55,6 +55,8 @@ class ProductCard extends StatelessWidget {
           },
           orElse: () {},
         );
+        final bool isOutOfStock = data.stock <= 0;
+        final bool isStockLimitReached = quantity >= data.stock;
 
         // ======================================================
         // CARD
@@ -64,6 +66,28 @@ class ProductCard extends StatelessWidget {
           behavior: HitTestBehavior.opaque,
 
           onTap: () {
+            if (isOutOfStock) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${data.name} sedang habis.'),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
+            }
+
+            if (isStockLimitReached) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Stok ${data.name} hanya tersedia ${data.stock}.',
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
+            }
+
             context.read<CheckoutBloc>().add(CheckoutEvent.addCheckout(data));
           },
 
@@ -99,33 +123,22 @@ class ProductCard extends StatelessWidget {
 
                   Expanded(
                     flex: 6,
-
                     child: Stack(
                       children: [
                         Container(
                           width: double.infinity,
-
                           decoration: BoxDecoration(
                             color: imageBackground,
-
                             borderRadius: BorderRadius.circular(13),
                           ),
-
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(13),
-
                             child: Image.network(
                               imageUrl,
-
                               width: double.infinity,
-
                               height: double.infinity,
-
                               fit: BoxFit.cover,
 
-                              // ========================================
-                              // LOADING
-                              // ========================================
                               loadingBuilder:
                                   (context, child, loadingProgress) {
                                     if (loadingProgress == null) {
@@ -138,7 +151,6 @@ class ProductCard extends StatelessWidget {
                                         height: 24,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2.2,
-
                                           valueColor:
                                               AlwaysStoppedAnimation<Color>(
                                                 primary,
@@ -148,16 +160,11 @@ class ProductCard extends StatelessWidget {
                                     );
                                   },
 
-                              // ========================================
-                              // ERROR
-                              // ========================================
                               errorBuilder: (context, error, stackTrace) {
                                 return const Center(
                                   child: Icon(
                                     Icons.restaurant_rounded,
-
                                     color: primary,
-
                                     size: 42,
                                   ),
                                 );
@@ -166,52 +173,68 @@ class ProductCard extends StatelessWidget {
                           ),
                         ),
 
-                        // =================================================
+                        // ========================================
+                        // STOK HABIS OVERLAY
+                        // ========================================
+                        if (isOutOfStock)
+                          Positioned.fill(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.45),
+                                borderRadius: BorderRadius.circular(13),
+                              ),
+                              child: Center(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 7,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.shade600,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Text(
+                                    'STOK HABIS',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                        // ========================================
                         // QUANTITY BADGE
-                        // =================================================
+                        // ========================================
                         if (quantity > 0)
                           Positioned(
                             top: 7,
                             right: 7,
-
                             child: Container(
                               constraints: const BoxConstraints(
                                 minWidth: 28,
                                 minHeight: 28,
                               ),
-
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 7,
                               ),
-
                               decoration: BoxDecoration(
                                 color: primary,
-
                                 borderRadius: BorderRadius.circular(9),
-
                                 border: Border.all(
                                   color: Colors.white,
                                   width: 2,
                                 ),
-
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: primary.withOpacity(0.25),
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
                               ),
-
                               child: Center(
                                 child: Text(
                                   quantity.toString(),
-
                                   style: const TextStyle(
                                     color: Colors.white,
-
                                     fontSize: 12,
-
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
@@ -312,32 +335,43 @@ class ProductCard extends StatelessWidget {
                       const SizedBox(width: 8),
 
                       // ADD BUTTON
-                      Container(
-                        width: 32,
-                        height: 32,
-
-                        decoration: BoxDecoration(
-                          color: primary,
-
-                          borderRadius: BorderRadius.circular(10),
-
-                          boxShadow: [
-                            BoxShadow(
-                              color: primary.withOpacity(0.18),
-
-                              blurRadius: 7,
-
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-
-                        child: const Icon(
-                          Icons.add_rounded,
-
-                          color: Colors.white,
-
-                          size: 20,
+                      GestureDetector(
+                        onTap: isOutOfStock || isStockLimitReached
+                            ? () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      isOutOfStock
+                                          ? '${data.name} sedang habis.'
+                                          : 'Stok ${data.name} hanya tersedia ${data.stock}.',
+                                    ),
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            : () {
+                                context.read<CheckoutBloc>().add(
+                                  CheckoutEvent.addCheckout(data),
+                                );
+                              },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: isOutOfStock || isStockLimitReached
+                                ? Colors.grey.shade300
+                                : primary,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            isOutOfStock
+                                ? Icons.remove_shopping_cart_rounded
+                                : Icons.add_rounded,
+                            color: isOutOfStock || isStockLimitReached
+                                ? Colors.grey.shade500
+                                : Colors.white,
+                            size: 20,
+                          ),
                         ),
                       ),
                     ],

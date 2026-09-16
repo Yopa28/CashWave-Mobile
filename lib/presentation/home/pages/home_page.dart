@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:cashwave_mobile/core/constants/colors.dart';
 import 'package:cashwave_mobile/core/extensions/build_context_ext.dart';
 import 'package:cashwave_mobile/presentation/draft_order/pages/draft_order_page.dart';
 import 'package:cashwave_mobile/presentation/home/bloc/product/product_bloc.dart';
+import 'package:cashwave_mobile/presentation/dashboard/bloc/dashboard_bloc.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 import '../../../core/components/search_input.dart';
 import '../../../data/datasources/auth_local_datasource.dart';
+import '../../../data/models/response/dashboard_response_model.dart';
 import '../../../data/models/response/product_response_model.dart';
 import '../bloc/category/category_bloc.dart';
 import '../widgets/product_card.dart';
@@ -22,61 +22,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // ============================================================
-  // CONTROLLERS
-  // ============================================================
-
   final TextEditingController searchController = TextEditingController();
-
-  // ============================================================
-  // STATE
-  // ============================================================
 
   int currentIndex = 0;
 
-  // ============================================================
-  // STOCK CONFIG
-  // ============================================================
-
   static const int lowStockThreshold = 5;
-
-  // ============================================================
-  // COLORS
-  // ============================================================
 
   static const Color primary = Color(0xff087A55);
   static const Color primaryDark = Color(0xff065C40);
-
   static const Color background = Color(0xffF7F9F8);
   static const Color cardColor = Colors.white;
-
   static const Color textPrimary = Color(0xff17221E);
   static const Color textSecondary = Color(0xff7A8581);
-
   static const Color borderColor = Color(0xffE5EBE8);
   static const Color lightGreen = Color(0xffE8F5F0);
-
-  // ============================================================
-  // INIT
-  // ============================================================
 
   @override
   void initState() {
     super.initState();
 
-    // Load products
     context.read<ProductBloc>().add(const ProductEvent.fetch());
-
-    // Load categories
     context.read<CategoryBloc>().add(const CategoryEvent.getCategoriesLocal());
 
-    // Connect printer
     _connectPrinter();
   }
-
-  // ============================================================
-  // PRINTER
-  // ============================================================
 
   Future<void> _connectPrinter() async {
     try {
@@ -90,19 +59,23 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // ============================================================
-  // DISPOSE
-  // ============================================================
+  void _refreshHome() {
+    context.read<DashboardBloc>().add(const DashboardEvent.fetch());
+
+    context.read<ProductBloc>().add(const ProductEvent.fetch());
+
+    searchController.clear();
+
+    setState(() {
+      currentIndex = 0;
+    });
+  }
 
   @override
   void dispose() {
     searchController.dispose();
     super.dispose();
   }
-
-  // ============================================================
-  // CATEGORY
-  // ============================================================
 
   void onCategoryTap(int index) {
     setState(() {
@@ -136,10 +109,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // ============================================================
-  // SEARCH
-  // ============================================================
-
   void onSearchChanged(String value) {
     if (value.length > 3) {
       context.read<ProductBloc>().add(ProductEvent.searchProduct(value));
@@ -150,24 +119,15 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // ============================================================
-  // BUILD
-  // ============================================================
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: background,
-
-      // ========================================================
-      // APP BAR
-      // ========================================================
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: background,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-
         title: const Text(
           'Menu Cafe',
           style: TextStyle(
@@ -177,11 +137,45 @@ class _HomePageState extends State<HomePage> {
             letterSpacing: -0.3,
           ),
         ),
-
         centerTitle: false,
-
         actions: [
-          // Draft Order
+          BlocBuilder<DashboardBloc, DashboardState>(
+            builder: (context, state) {
+              final isLoading = state.maybeWhen(
+                loading: () => true,
+                orElse: () => false,
+              );
+
+              return Container(
+                margin: const EdgeInsets.only(right: 8),
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: borderColor),
+                ),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: isLoading ? null : _refreshHome,
+                  icon: isLoading
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(primary),
+                          ),
+                        )
+                      : const Icon(
+                          Icons.refresh_rounded,
+                          color: primary,
+                          size: 22,
+                        ),
+                ),
+              );
+            },
+          ),
           Container(
             margin: const EdgeInsets.only(right: 16),
             width: 42,
@@ -205,212 +199,287 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-
-      // ========================================================
-      // BODY
-      // ========================================================
       body: SafeArea(
         top: false,
-        child: BlocBuilder<ProductBloc, ProductState>(
-          builder: (context, state) {
-            return state.maybeWhen(
-              success: (products) {
-                return _buildHomeContent(products);
-              },
-              loading: () {
-                return _buildHomeLoading();
-              },
-              error: (message) {
-                return _buildHomeError(message);
-              },
-              orElse: () {
-                return const SizedBox();
-              },
-            );
+        child: RefreshIndicator(
+          color: primary,
+          onRefresh: () async {
+            _refreshHome();
+            await Future.delayed(const Duration(milliseconds: 500));
           },
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+            children: [
+              const Text(
+                'Pilih produk untuk membuat pesanan',
+                style: TextStyle(color: textSecondary, fontSize: 13),
+              ),
+
+              const SizedBox(height: 18),
+
+              _buildDashboard(),
+
+              const SizedBox(height: 20),
+
+              _buildSearch(),
+
+              const SizedBox(height: 24),
+
+              _buildProductContent(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // ============================================================
-  // HOME CONTENT
-  // ============================================================
+  Widget _buildDashboard() {
+    return BlocBuilder<DashboardBloc, DashboardState>(
+      builder: (context, state) {
+        return state.maybeWhen(
+          initial: () => const SizedBox.shrink(),
+          loading: () => _buildDashboardLoading(),
+          success: (data) => _buildDashboardContent(data),
+          error: (message) => _buildDashboardError(message),
+          orElse: () => const SizedBox.shrink(),
+        );
+      },
+    );
+  }
 
-  Widget _buildHomeContent(List<Product> products) {
-    final List<Product> lowStockProducts = products
-        .where(
-          (product) => product.stock > 0 && product.stock <= lowStockThreshold,
-        )
-        .toList();
+  Widget _buildDashboardContent(DashboardResponseModel response) {
+    final dashboard = response.data;
 
-    final List<Product> outOfStockProducts = products
-        .where((product) => product.stock <= 0)
-        .toList();
-
-    final int totalProducts = products.length;
-
-    final int attentionCount =
-        lowStockProducts.length + outOfStockProducts.length;
-
-    return ListView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ======================================================
-        // SUBTITLE
-        // ======================================================
+        _buildSalesCard(dashboard.today),
 
-        const Text(
-          'Pilih produk untuk membuat pesanan',
-          style: TextStyle(
-            color: textSecondary,
-            fontSize: 13,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        const SizedBox(height: 12),
 
-        const SizedBox(height: 20),
-
-        // ======================================================
-        // SEARCH
-        // ======================================================
-        _buildSearch(),
-
-        const SizedBox(height: 20),
-
-        // ======================================================
-        // STOCK SUMMARY
-        // ======================================================
-        _buildStockSummary(
-          totalProducts: totalProducts,
-          lowStockCount: lowStockProducts.length,
-          outOfStockCount: outOfStockProducts.length,
-        ),
-
-        // ======================================================
-        // STOCK ALERT
-        // ======================================================
-        if (attentionCount > 0) ...[
-          const SizedBox(height: 24),
-
-          _buildLowStockSection(
-            lowStockProducts: lowStockProducts,
-            outOfStockProducts: outOfStockProducts,
-          ),
-        ],
-
-        const SizedBox(height: 28),
-
-        // ======================================================
-        // CATEGORY TITLE
-        // ======================================================
-        _buildSectionHeader(title: 'Kategori'),
-
-        const SizedBox(height: 14),
-
-        // ======================================================
-        // CATEGORY
-        // ======================================================
-        _buildCategories(),
-
-        const SizedBox(height: 28),
-
-        // ======================================================
-        // PRODUCT HEADER
-        // ======================================================
-        _buildProductHeader(products.length),
-
-        const SizedBox(height: 14),
-
-        // ======================================================
-        // PRODUCT LIST
-        // ======================================================
-        if (products.isEmpty)
-          const ProductEmpty()
-        else
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: products.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 0.70,
+        Row(
+          children: [
+            Expanded(
+              child: _buildDashboardStatCard(
+                icon: Icons.receipt_long_rounded,
+                iconBackground: lightGreen,
+                iconColor: primary,
+                value: '${dashboard.today.transactions}',
+                title: 'Transaksi',
+                subtitle: 'hari ini',
+              ),
             ),
-            itemBuilder: (context, index) {
-              return ProductCard(data: products[index]);
-            },
-          ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _buildDashboardStatCard(
+                icon: Icons.shopping_bag_rounded,
+                iconBackground: const Color(0xffEAF1FF),
+                iconColor: const Color(0xff4D7CFE),
+                value: '${dashboard.today.items}',
+                title: 'Item Terjual',
+                subtitle: 'hari ini',
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        _buildProductStockDashboard(dashboard.products),
+
+        if (dashboard.recentOrders.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          _buildRecentOrders(dashboard.recentOrders),
+        ],
       ],
     );
   }
 
-  // ============================================================
-  // STOCK SUMMARY
-  // ============================================================
+  Widget _buildSalesCard(TodaySales today) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [primary, primaryDark],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: primary.withOpacity(0.18),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.14),
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: const Icon(
+              Icons.payments_rounded,
+              color: Colors.white,
+              size: 23,
+            ),
+          ),
+          const SizedBox(width: 13),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Penjualan Hari Ini',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  _formatRupiah(today.sales),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 21,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${today.transactions} transaksi • ${today.items} item terjual',
+                  style: const TextStyle(color: Colors.white70, fontSize: 10),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget _buildStockSummary({
-    required int totalProducts,
-    required int lowStockCount,
-    required int outOfStockCount,
+  Widget _buildDashboardStatCard({
+    required IconData icon,
+    required Color iconBackground,
+    required Color iconColor,
+    required String value,
+    required String title,
+    required String subtitle,
   }) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.025),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: iconBackground,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, size: 18, color: iconColor),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: const TextStyle(
+                    color: textPrimary,
+                    fontSize: 19,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 1),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: textPrimary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: const TextStyle(color: textSecondary, fontSize: 9),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductStockDashboard(ProductStockSummary products) {
     return Row(
       children: [
         Expanded(
-          child: _buildSummaryCard(
+          child: _buildStockDashboardCard(
             icon: Icons.inventory_2_rounded,
-            title: 'Total Produk',
-            value: '$totalProducts',
-            subtitle: 'produk tersedia',
             iconBackground: lightGreen,
             iconColor: primary,
+            value: '${products.total}',
+            title: 'Total Produk',
+            subtitle: 'produk',
           ),
         ),
-
         const SizedBox(width: 10),
-
         Expanded(
-          child: _buildSummaryCard(
+          child: _buildStockDashboardCard(
             icon: Icons.warning_amber_rounded,
-            title: 'Low Stock',
-            value: '$lowStockCount',
-            subtitle: lowStockCount == 1
-                ? 'perlu perhatian'
-                : 'perlu perhatian',
             iconBackground: const Color(0xfffff4df),
             iconColor: const Color(0xffd99000),
+            value: '${products.lowStock}',
+            title: 'Low Stock',
+            subtitle: 'perlu perhatian',
           ),
         ),
-
         const SizedBox(width: 10),
-
         Expanded(
-          child: _buildSummaryCard(
+          child: _buildStockDashboardCard(
             icon: Icons.remove_shopping_cart_rounded,
-            title: 'Habis',
-            value: '$outOfStockCount',
-            subtitle: 'stok kosong',
             iconBackground: const Color(0xffffeaea),
             iconColor: const Color(0xffd64545),
+            value: '${products.outOfStock}',
+            title: 'Habis',
+            subtitle: 'stok kosong',
           ),
         ),
       ],
     );
   }
 
-  // ============================================================
-  // SUMMARY CARD
-  // ============================================================
-
-  Widget _buildSummaryCard({
+  Widget _buildStockDashboardCard({
     required IconData icon,
-    required String title,
-    required String value,
-    required String subtitle,
     required Color iconBackground,
     required Color iconColor,
+    required String value,
+    required String title,
+    required String subtitle,
   }) {
     return Container(
       padding: const EdgeInsets.all(13),
@@ -438,42 +507,294 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Icon(icon, size: 18, color: iconColor),
           ),
-
-          const SizedBox(height: 10),
-
+          const SizedBox(height: 9),
           Text(
             value,
             style: const TextStyle(
               color: textPrimary,
-              fontSize: 21,
+              fontSize: 20,
               fontWeight: FontWeight.w800,
-              letterSpacing: -0.5,
             ),
           ),
-
           const SizedBox(height: 2),
-
           Text(
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: textPrimary,
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: FontWeight.w600,
             ),
           ),
-
           const SizedBox(height: 2),
-
           Text(
             subtitle,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: textSecondary,
-              fontSize: 9,
-              fontWeight: FontWeight.w400,
+            style: const TextStyle(color: textSecondary, fontSize: 8),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentOrders(List<RecentOrder> orders) {
+    final visibleOrders = orders.take(5).toList();
+
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: borderColor),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.025),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: lightGreen,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.receipt_long_rounded,
+                  color: primary,
+                  size: 19,
+                ),
+              ),
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Transaksi Terbaru',
+                      style: TextStyle(
+                        color: textPrimary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'Aktivitas transaksi terbaru',
+                      style: TextStyle(color: textSecondary, fontSize: 9),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...List.generate(visibleOrders.length, (index) {
+            final order = visibleOrders[index];
+
+            return Column(
+              children: [
+                _buildRecentOrderItem(order),
+                if (index != visibleOrders.length - 1)
+                  const Divider(height: 18, color: borderColor),
+              ],
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentOrderItem(RecentOrder order) {
+    return Row(
+      children: [
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: background,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const Icon(
+            Icons.shopping_bag_outlined,
+            color: primary,
+            size: 18,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                order.orderNumber.isEmpty
+                    ? 'Transaksi #${order.id}'
+                    : order.orderNumber,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: textPrimary,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                '${order.totalItem} item • ${_paymentLabel(order.paymentMethod)}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: textSecondary, fontSize: 9),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              _formatRupiah(order.totalPrice),
+              style: const TextStyle(
+                color: textPrimary,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            if (order.transactionTime != null) ...[
+              const SizedBox(height: 3),
+              Text(
+                _formatTime(order.transactionTime!),
+                style: const TextStyle(color: textSecondary, fontSize: 8),
+              ),
+            ],
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDashboardLoading() {
+    return Column(
+      children: [
+        _buildLoadingBox(height: 110, radius: 18),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(child: _buildLoadingBox(height: 82, radius: 16)),
+            const SizedBox(width: 10),
+            Expanded(child: _buildLoadingBox(height: 82, radius: 16)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(child: _buildLoadingBox(height: 125, radius: 16)),
+            const SizedBox(width: 10),
+            Expanded(child: _buildLoadingBox(height: 125, radius: 16)),
+            const SizedBox(width: 10),
+            Expanded(child: _buildLoadingBox(height: 125, radius: 16)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLoadingBox({required double height, required double radius}) {
+    return Container(
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(color: borderColor),
+      ),
+      child: const Center(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(primary),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDashboardError(String message) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: const Color(0xffffeaea),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(
+              Icons.cloud_off_rounded,
+              color: Color(0xffd64545),
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Dashboard tidak tersedia',
+                  style: TextStyle(
+                    color: textPrimary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  message,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: textSecondary, fontSize: 9),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          InkWell(
+            borderRadius: BorderRadius.circular(9),
+            onTap: () {
+              context.read<DashboardBloc>().add(const DashboardEvent.fetch());
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              decoration: BoxDecoration(
+                color: lightGreen,
+                borderRadius: BorderRadius.circular(9),
+              ),
+              child: const Text(
+                'Coba Lagi',
+                style: TextStyle(
+                  color: primary,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ),
         ],
@@ -481,20 +802,90 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // ============================================================
-  // LOW STOCK SECTION
-  // ============================================================
+  Widget _buildProductContent() {
+    return BlocBuilder<ProductBloc, ProductState>(
+      builder: (context, state) {
+        return state.maybeWhen(
+          success: (products) {
+            return _buildProductSuccess(products);
+          },
+          loading: () {
+            return _buildProductLoading();
+          },
+          error: (message) {
+            return _buildProductError(message);
+          },
+          orElse: () {
+            return const SizedBox.shrink();
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildProductSuccess(List<Product> products) {
+    final lowStockProducts = products
+        .where(
+          (product) => product.stock > 0 && product.stock <= lowStockThreshold,
+        )
+        .toList();
+
+    final outOfStockProducts = products
+        .where((product) => product.stock <= 0)
+        .toList();
+
+    final attentionCount = lowStockProducts.length + outOfStockProducts.length;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (attentionCount > 0) ...[
+          _buildLowStockSection(
+            lowStockProducts: lowStockProducts,
+            outOfStockProducts: outOfStockProducts,
+          ),
+          const SizedBox(height: 26),
+        ],
+
+        _buildSectionHeader(title: 'Kategori'),
+
+        const SizedBox(height: 14),
+
+        _buildCategories(),
+
+        const SizedBox(height: 26),
+
+        _buildProductHeader(products.length),
+
+        const SizedBox(height: 14),
+
+        if (products.isEmpty)
+          const ProductEmpty()
+        else
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: products.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 0.70,
+            ),
+            itemBuilder: (context, index) {
+              return ProductCard(data: products[index]);
+            },
+          ),
+      ],
+    );
+  }
 
   Widget _buildLowStockSection({
     required List<Product> lowStockProducts,
     required List<Product> outOfStockProducts,
   }) {
-    final List<Product> attentionProducts = [
-      ...outOfStockProducts,
-      ...lowStockProducts,
-    ];
+    final attentionProducts = [...outOfStockProducts, ...lowStockProducts];
 
-    // Dashboard hanya menampilkan maksimal 4 produk
     final visibleProducts = attentionProducts.take(4).toList();
 
     return Container(
@@ -514,10 +905,6 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ====================================================
-          // HEADER
-          // ====================================================
-
           Row(
             children: [
               Container(
@@ -533,9 +920,7 @@ class _HomePageState extends State<HomePage> {
                   size: 20,
                 ),
               ),
-
               const SizedBox(width: 10),
-
               const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -556,7 +941,6 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-
               if (attentionProducts.length > 4)
                 TextButton(
                   onPressed: () {
@@ -581,30 +965,21 @@ class _HomePageState extends State<HomePage> {
                 ),
             ],
           ),
-
           const SizedBox(height: 14),
-
-          // ====================================================
-          // PRODUCTS
-          // ====================================================
           ...visibleProducts.map((product) => _buildStockItem(product)),
         ],
       ),
     );
   }
 
-  // ============================================================
-  // STOCK ITEM
-  // ============================================================
-
   Widget _buildStockItem(Product product) {
-    final bool isOutOfStock = product.stock <= 0;
+    final isOutOfStock = product.stock <= 0;
 
-    final Color statusColor = isOutOfStock
+    final statusColor = isOutOfStock
         ? const Color(0xffd64545)
         : const Color(0xffd99000);
 
-    final Color statusBackground = isOutOfStock
+    final statusBackground = isOutOfStock
         ? const Color(0xffffeaea)
         : const Color(0xfffff4df);
 
@@ -617,10 +992,6 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Row(
         children: [
-          // ==================================================
-          // IMAGE
-          // ==================================================
-
           Container(
             width: 42,
             height: 42,
@@ -650,12 +1021,7 @@ class _HomePageState extends State<HomePage> {
                     ),
             ),
           ),
-
           const SizedBox(width: 10),
-
-          // ==================================================
-          // PRODUCT INFO
-          // ==================================================
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -670,9 +1036,7 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-
                 const SizedBox(height: 3),
-
                 Text(
                   product.category,
                   maxLines: 1,
@@ -682,12 +1046,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-
           const SizedBox(width: 8),
-
-          // ==================================================
-          // STOCK
-          // ==================================================
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -699,9 +1058,7 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.w800,
                 ),
               ),
-
               const SizedBox(height: 3),
-
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                 decoration: BoxDecoration(
@@ -724,15 +1081,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // ============================================================
-  // SHOW ALL STOCK ALERT
-  // ============================================================
-
   void _showAllStockAlert({
     required List<Product> lowStockProducts,
     required List<Product> outOfStockProducts,
   }) {
-    final List<Product> products = [...outOfStockProducts, ...lowStockProducts];
+    final products = [...outOfStockProducts, ...lowStockProducts];
 
     showModalBottomSheet(
       context: context,
@@ -749,8 +1102,6 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 const SizedBox(height: 10),
-
-                // Handle
                 Container(
                   width: 38,
                   height: 4,
@@ -759,10 +1110,7 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-
                 const SizedBox(height: 18),
-
-                // Header
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
@@ -784,9 +1132,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 6),
-
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Align(
@@ -797,9 +1143,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
                 Expanded(
                   child: ListView.separated(
                     physics: const BouncingScrollPhysics(),
@@ -819,16 +1163,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // ============================================================
-  // SEARCH
-  // ============================================================
-
   Widget _buildSearch() {
     return Container(
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: borderColor, width: 1),
+        border: Border.all(color: borderColor),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.025),
@@ -844,10 +1184,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // ============================================================
-  // SECTION HEADER
-  // ============================================================
-
   Widget _buildSectionHeader({required String title}) {
     return Text(
       title,
@@ -859,10 +1195,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  // ============================================================
-  // PRODUCT HEADER
-  // ============================================================
 
   Widget _buildProductHeader(int productCount) {
     return Row(
@@ -877,7 +1209,6 @@ class _HomePageState extends State<HomePage> {
             letterSpacing: -0.2,
           ),
         ),
-
         Text(
           '$productCount produk',
           style: const TextStyle(
@@ -890,10 +1221,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // ============================================================
-  // CATEGORIES
-  // ============================================================
-
   Widget _buildCategories() {
     return SizedBox(
       height: 76,
@@ -902,41 +1229,31 @@ class _HomePageState extends State<HomePage> {
         physics: const BouncingScrollPhysics(),
         children: [
           _categoryCard(index: 0, icon: Icons.apps_rounded, label: 'Semua'),
-
           const SizedBox(width: 10),
-
           _categoryCard(
             index: 1,
             icon: Icons.local_cafe_rounded,
             label: 'Minuman',
           ),
-
           const SizedBox(width: 10),
-
           _categoryCard(
             index: 2,
             icon: Icons.restaurant_rounded,
             label: 'Makanan',
           ),
-
           const SizedBox(width: 10),
-
           _categoryCard(index: 3, icon: Icons.fastfood_rounded, label: 'Snack'),
         ],
       ),
     );
   }
 
-  // ============================================================
-  // CATEGORY CARD
-  // ============================================================
-
   Widget _categoryCard({
     required int index,
     required IconData icon,
     required String label,
   }) {
-    final bool isActive = currentIndex == index;
+    final isActive = currentIndex == index;
 
     return GestureDetector(
       onTap: () {
@@ -971,9 +1288,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 23, color: isActive ? Colors.white : primary),
-
             const SizedBox(height: 6),
-
             Text(
               label,
               maxLines: 1,
@@ -990,26 +1305,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // ============================================================
-  // LOADING
-  // ============================================================
-
-  Widget _buildHomeLoading() {
-    return ListView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+  Widget _buildProductLoading() {
+    return Column(
       children: [
-        const Text(
-          'Pilih produk untuk membuat pesanan',
-          style: TextStyle(color: textSecondary, fontSize: 13),
-        ),
-
+        _buildLoadingBox(height: 90, radius: 16),
         const SizedBox(height: 20),
-
-        _buildSearch(),
-
-        const SizedBox(height: 40),
-
         const Center(
           child: Column(
             children: [
@@ -1021,9 +1321,7 @@ class _HomePageState extends State<HomePage> {
                   valueColor: AlwaysStoppedAnimation<Color>(primary),
                 ),
               ),
-
               SizedBox(height: 12),
-
               Text(
                 'Memuat menu...',
                 style: TextStyle(color: textSecondary, fontSize: 12),
@@ -1035,95 +1333,115 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // ============================================================
-  // ERROR
-  // ============================================================
-
-  Widget _buildHomeError(String message) {
-    return ListView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-      children: [
-        const Text(
-          'Pilih produk untuk membuat pesanan',
-          style: TextStyle(color: textSecondary, fontSize: 13),
-        ),
-
-        const SizedBox(height: 20),
-
-        _buildSearch(),
-
-        const SizedBox(height: 20),
-
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: borderColor),
+  Widget _buildProductError(String message) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: Colors.red.withOpacity(0.08),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.error_outline_rounded,
+              color: Colors.redAccent,
+              size: 27,
+            ),
           ),
-          child: Column(
-            children: [
-              Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.08),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.error_outline_rounded,
-                  color: Colors.redAccent,
-                  size: 27,
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              const Text(
-                'Gagal memuat menu',
-                style: TextStyle(
-                  color: textPrimary,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-
-              const SizedBox(height: 5),
-
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: textSecondary, fontSize: 12),
-              ),
-
-              const SizedBox(height: 15),
-
-              SizedBox(
-                height: 38,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.read<ProductBloc>().add(const ProductEvent.fetch());
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primary,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(horizontal: 18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    'Coba Lagi',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-            ],
+          const SizedBox(height: 12),
+          const Text(
+            'Gagal memuat menu',
+            style: TextStyle(
+              color: textPrimary,
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 5),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: textSecondary, fontSize: 12),
+          ),
+          const SizedBox(height: 15),
+          SizedBox(
+            height: 38,
+            child: ElevatedButton(
+              onPressed: () {
+                context.read<ProductBloc>().add(const ProductEvent.fetch());
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primary,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: const Text(
+                'Coba Lagi',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  String _formatRupiah(int value) {
+    final formatted = value.toString().replaceAllMapped(
+      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+      (match) => '${match.group(1)}.',
+    );
+
+    return 'Rp $formatted';
+  }
+
+  String _paymentLabel(String value) {
+    if (value.isEmpty) {
+      return 'Pembayaran';
+    }
+
+    final normalized = value.toLowerCase();
+
+    switch (normalized) {
+      case 'cash':
+      case 'tunai':
+        return 'Tunai';
+
+      case 'qris':
+        return 'QRIS';
+
+      case 'transfer':
+      case 'bank_transfer':
+        return 'Transfer';
+
+      case 'debit':
+        return 'Debit';
+
+      case 'credit':
+      case 'credit_card':
+        return 'Kartu Kredit';
+
+      default:
+        return value;
+    }
+  }
+
+  String _formatTime(DateTime dateTime) {
+    final hour = dateTime.hour.toString().padLeft(2, '0');
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+
+    return '$hour:$minute';
   }
 }
